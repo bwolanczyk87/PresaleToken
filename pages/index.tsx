@@ -7,7 +7,7 @@ export default function HomePage() {
       padding="md"
       header={
         <Header height={60} p="xs">
-          <HeaderContainer walletConnected />
+          <HeaderContainer walletConnected={false} />
         </Header>
       }
     >
