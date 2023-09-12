@@ -1,5 +1,5 @@
 import NextApp, { AppProps, AppContext } from 'next/app';
-import { Merriweather, PT_Sans } from 'next/font/google';
+import { PT_Sans } from 'next/font/google';
 import Head from 'next/head';
 import { MantineProvider, ColorScheme } from '@mantine/core';
 
