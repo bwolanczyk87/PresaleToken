@@ -5,10 +5,10 @@ import { ConnectionProgress, ModalErrorStateProps } from '@/components/Modals/Mo
 /**
  * Modal section to show an error state when connecting wallet or
  * purchasing a token.
- * @prop connectionProgress state to indicate the error state
- * @prop retryRequest function to retry the failed request
- * @prop cancelErrorText Error text to show when request is cancelled
- * @prop isWalletConnectionRequest whether the request is from a wallet connection
+ * @prop connectionProgress - state to indicate the error state
+ * @prop retryRequest - function to retry the failed request
+ * @prop cancelErrorText - Error text to show when request is cancelled
+ * @prop isWalletConnectionRequest - whether the request is from a wallet connection
  * @returns React node
  */
 

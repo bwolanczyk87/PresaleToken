@@ -27,7 +27,7 @@ export default function HomePage() {
   // open/close states for token purchase modal
   const [opened, { open, close }] = useDisclosure(false);
   const [connectionProgress, setConnectionProgress] = useState<ConnectionProgress>(
-    ConnectionProgress.ERROR
+    ConnectionProgress.CONNECTING
   );
 
   const form = useForm({

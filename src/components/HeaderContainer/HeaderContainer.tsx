@@ -10,7 +10,7 @@ const address = '0x0574DB630bb75DBe4310fbd6eB08Dc47048b6fad';
 
 const HeaderContainer: React.FC<{ walletConnected: boolean }> = ({ walletConnected }) => {
   const [connectionProgress, setConnectionProgress] = useState<ConnectionProgress>(
-    ConnectionProgress.REJECTED
+    ConnectionProgress.CONNECTING
   );
   const [opened, { open, close }] = useDisclosure(false);
 

@@ -1,6 +1,7 @@
 import { Button, Text, Image, Modal, Flex, Box, Group, Title } from '@mantine/core';
 import { TokenPurchaseModalProps, ConnectionProgress } from '@/components/Modals/ModalTypes';
 import ModalErrorState from '@/components/Modals/ModalProgressStates/ModalErrorState';
+import ModalConnectingState from '@/components/Modals/ModalProgressStates/ModalConnectingState';
 
 const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
   opened,
@@ -105,47 +106,7 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
 
     {/* connection request initiated. Awaiting user approval from extension  */}
     {connectionProgress === ConnectionProgress.CONNECTING && (
-      <>
-        <Flex
-          mih={50}
-          gap="md"
-          justify="flex-start"
-          align="center"
-          direction="column"
-          wrap="wrap"
-          mt="xl"
-        >
-          <div
-            style={{
-              position: 'relative',
-            }}
-          >
-            <Image maw={100} mx="auto" radius="md" src="/spinner.svg" alt="spinner icon" />
-            <Image
-              maw={64}
-              mx="auto"
-              radius="md"
-              src="/metamaskIcon.svg"
-              alt="metamask icon"
-              styles={{
-                root: {
-                  position: 'absolute',
-                  inset: '0px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                },
-              }}
-            />
-          </div>
-          <Text fz="lg" fw="bold" color="white">
-            Requesting connection
-          </Text>
-          <Text align="center">
-            Please approve this purchase request from your MetaMask extension
-          </Text>
-        </Flex>
-      </>
+      <ModalConnectingState connectionRequestText="Please approve this purchase request from your MetaMask extension." />
     )}
 
     {/* user rejected the connection request  */}

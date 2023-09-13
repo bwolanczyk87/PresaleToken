@@ -1,6 +1,7 @@
-import { Button, Text, Image, Modal, Flex, Title } from '@mantine/core';
+import { Button, Text, Image, Modal, Title } from '@mantine/core';
 import { ConnectionProgress, WalletConnectModalProps } from '@/components/Modals/ModalTypes';
 import ModalErrorState from '@/components/Modals/ModalProgressStates/ModalErrorState';
+import ModalConnectingState from '@/components/Modals/ModalProgressStates/ModalConnectingState';
 
 const WalletConnectModal: React.FC<WalletConnectModalProps> = ({
   opened,
@@ -56,43 +57,7 @@ const WalletConnectModal: React.FC<WalletConnectModalProps> = ({
         <Title color="white" fw="bold" fz="xl" align="center">
           MetaMask
         </Title>
-        <Flex
-          mih={50}
-          gap="md"
-          justify="flex-start"
-          align="center"
-          direction="column"
-          wrap="wrap"
-          mt="xl"
-        >
-          <div
-            style={{
-              position: 'relative',
-            }}
-          >
-            <Image maw={100} mx="auto" radius="md" src="/spinner.svg" alt="spinner icon" />
-            <Image
-              maw={64}
-              mx="auto"
-              radius="md"
-              src="/metamaskIcon.svg"
-              alt="metamask icon"
-              styles={{
-                root: {
-                  position: 'absolute',
-                  inset: '0px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                },
-              }}
-            />
-          </div>
-          <Text fz="lg" fw="bold" color="white">
-            Requesting connection
-          </Text>
-          <Text align="center">Please approve the request from your MetaMask extension</Text>
-        </Flex>
+        <ModalConnectingState connectionRequestText="Please approve the request from your MetaMask extension." />
       </>
     )}
 

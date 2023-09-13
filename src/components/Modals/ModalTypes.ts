@@ -30,3 +30,7 @@ export interface ModalErrorStateProps {
   cancelErrorText: string;
   isWalletConnectionRequest?: boolean;
 }
+
+export interface ModalConnectingStateProps {
+  connectionRequestText: string;
+}
