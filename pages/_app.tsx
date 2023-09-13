@@ -1,11 +1,11 @@
 import NextApp, { AppProps, AppContext } from 'next/app';
-import { PT_Sans } from 'next/font/google';
+import { Exo } from 'next/font/google';
 import Head from 'next/head';
 import { MantineProvider, ColorScheme } from '@mantine/core';
 
-const barlowCondensed = PT_Sans({
+const barlowCondensed = Exo({
   subsets: ['latin'],
-  weight: ['400', '700'],
+  weight: ['200', '300', '400', '500', '600', '700'],
 });
 
 export default function App(props: AppProps & { colorScheme: ColorScheme }) {
@@ -14,13 +14,16 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
   return (
     <>
       <Head>
-        <title>TSTX Pre-sale</title>
+        <title>TSTK Pre-sale</title>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
         <link rel="shortcut icon" href="/favicon.ico" />
       </Head>
 
       <MantineProvider
-        theme={{ colorScheme: 'dark', fontFamily: barlowCondensed.style.fontFamily }}
+        theme={{
+          colorScheme: 'dark',
+          fontFamily: barlowCondensed.style.fontFamily,
+        }}
         withGlobalStyles
         withNormalizeCSS
       >

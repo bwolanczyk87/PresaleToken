@@ -9,19 +9,19 @@ const address = '0x0574DB630bb75DBe4310fbd6eB08Dc47048b6fad';
 
 const HeaderContainer: React.FC<{ walletConnected: boolean }> = ({ walletConnected }) => {
   const [connectionProgress, setConnectionProgress] = useState<ConnectionProgress>(
-    ConnectionProgress.REJECTED
+    ConnectionProgress.PENDING
   );
   const [opened, { open, close }] = useDisclosure(false);
   return (
     <div>
-      <Container size="sm">
+      <Container size="lg">
         <Group position="apart">
           <div>
             <Image maw={36} mx="auto" radius="md" src="/brandLogo.png" alt="brand logo" />
           </div>
           {!walletConnected && (
             <Button
-              radius="lg"
+              radius="md"
               uppercase
               style={{
                 backgroundColor: '#CAFC36',
@@ -29,7 +29,7 @@ const HeaderContainer: React.FC<{ walletConnected: boolean }> = ({ walletConnect
               }}
               onClick={open}
             >
-              <Text fz="md">login with wallet</Text>
+              <Text fz="md">Connect wallet</Text>
             </Button>
           )}
           {walletConnected && (
