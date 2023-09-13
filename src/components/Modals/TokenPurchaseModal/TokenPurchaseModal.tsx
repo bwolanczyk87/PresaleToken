@@ -2,6 +2,7 @@ import { Button, Text, Image, Modal, Flex, Box, Group, Title } from '@mantine/co
 import { TokenPurchaseModalProps, ConnectionProgress } from '@/components/Modals/ModalTypes';
 import ModalErrorState from '@/components/Modals/ModalProgressStates/ModalErrorState';
 import ModalConnectingState from '@/components/Modals/ModalProgressStates/ModalConnectingState';
+import ModalSuccessState from '@/components/Modals/ModalProgressStates/ModalSuccessState';
 
 const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
   opened,
@@ -118,6 +119,9 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
         cancelErrorText="You cancelled the purchase request."
       />
     )}
+
+    {/* token purchse was a success  */}
+    {connectionProgress === ConnectionProgress.SUCCESS && <ModalSuccessState closeModal={close} />}
   </Modal>
 );
 

@@ -34,3 +34,7 @@ export interface ModalErrorStateProps {
 export interface ModalConnectingStateProps {
   connectionRequestText: string;
 }
+
+export interface ModalSuccessStateProps {
+  closeModal: () => void;
+}
