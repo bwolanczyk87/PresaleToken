@@ -2,11 +2,25 @@ import NextApp, { AppProps, AppContext } from 'next/app';
 import { Exo } from 'next/font/google';
 import Head from 'next/head';
 import { MantineProvider, ColorScheme } from '@mantine/core';
+import { WagmiConfig, createConfig } from 'wagmi';
+import { polygonMumbai } from 'wagmi/chains';
+import { ConnectKitProvider, getDefaultConfig } from 'connectkit';
 
-const barlowCondensed = Exo({
+// google font
+const exoFont = Exo({
   subsets: ['latin'],
   weight: ['200', '300', '400', '500', '600', '700'],
 });
+
+// connectKit + wagmi
+const config = createConfig(
+  getDefaultConfig({
+    appName: 'TSTK Pre-sale App',
+    alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_ID,
+    chains: [polygonMumbai],
+    walletConnectProjectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
+  })
+);
 
 export default function App(props: AppProps & { colorScheme: ColorScheme }) {
   const { Component, pageProps } = props;
@@ -22,12 +36,16 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
       <MantineProvider
         theme={{
           colorScheme: 'dark',
-          fontFamily: barlowCondensed.style.fontFamily,
+          fontFamily: exoFont.style.fontFamily,
         }}
         withGlobalStyles
         withNormalizeCSS
       >
-        <Component {...pageProps} />
+        <WagmiConfig config={config}>
+          <ConnectKitProvider debugMode>
+            <Component {...pageProps} />
+          </ConnectKitProvider>
+        </WagmiConfig>
       </MantineProvider>
     </>
   );

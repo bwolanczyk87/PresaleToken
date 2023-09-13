@@ -3,8 +3,7 @@ import { IconRotateClockwise } from '@tabler/icons-react';
 import { ConnectionProgress, ModalErrorStateProps } from '@/components/Modals/ModalTypes';
 
 /**
- * Modal section to show an error state when connecting wallet or
- * purchasing a token.
+ * Modal section to show an error state when purchasing a token.
  * @prop connectionProgress - state to indicate the error state
  * @prop retryRequest - function to retry the failed request
  * @prop cancelErrorText - Error text to show when request is cancelled
