@@ -56,7 +56,7 @@ export default function HomePage() {
       }}
       header={
         <Header height={80} p="lg">
-          <HeaderContainer walletConnected />
+          <HeaderContainer walletConnected={false} />
         </Header>
       }
     >
@@ -224,7 +224,7 @@ export default function HomePage() {
                   }}
                 >
                   <Text size="1rem" fw={500} color="white">
-                    Presale price: <span>{stageTokenPrice} MATIC</span>
+                    Presale Price: <span>{stageTokenPrice} MATIC</span>
                   </Text>
                 </div>
               </Flex>

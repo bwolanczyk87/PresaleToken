@@ -21,7 +21,7 @@ const WalletConnectModal: React.FC<WalletConnectModalProps> = ({
   connectionProgress,
   setConnectionProgress,
 }) => (
-  <Modal opened={opened} onClose={close} withCloseButton={false} centered size="sm" radius="lg">
+  <Modal opened={opened} onClose={close} withCloseButton={false} centered size="sm" radius="lg" padding="xl">
     {/* user is yet to select a wallet option  */}
     {connectionProgress === ConnectionProgress.PENDING && (
       <>
