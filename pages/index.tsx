@@ -27,7 +27,7 @@ export default function HomePage() {
   // open/close states for token purchase modal
   const [opened, { open, close }] = useDisclosure(false);
   const [connectionProgress, setConnectionProgress] = useState<ConnectionProgress>(
-    ConnectionProgress.PENDING
+    ConnectionProgress.ERROR
   );
 
   const form = useForm({
@@ -60,6 +60,18 @@ export default function HomePage() {
     // open modal to confirm amounts
     open();
     console.log({ tokenAmount: value });
+  };
+
+  //TODO: Retry token purchase
+  const retryTokenPurchase = () => {
+    setConnectionProgress(ConnectionProgress.CONNECTING);
+
+    // add more logic
+  };
+
+  //TODO: Contract call to purchase token
+  const purchaseToken = () => {
+    console.log('We are not making contract call to purchase token');
   };
 
   const totalPriceOfPurchase = +form.values.tokenAmount * stageTokenPrice;
@@ -343,6 +355,8 @@ export default function HomePage() {
           walletMaticBalance={walletMaticBalance}
           stageTokenPrice={stageTokenPrice}
           totalPriceOfPurchase={totalPriceOfPurchase}
+          retryRequest={retryTokenPurchase}
+          submitRequest={purchaseToken}
         />
       </Container>
     </AppShell>

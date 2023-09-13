@@ -4,8 +4,8 @@ export enum ConnectionProgress {
   PENDING = 'PENDING',
   CONNECTING = 'CONNECTING',
   REJECTED = 'REJECTED',
-  // TODO: add modal state
   ERROR = 'ERROR',
+  SUCCESS = 'SUCCESS',
 }
 
 export interface WalletConnectModalProps {
@@ -13,6 +13,8 @@ export interface WalletConnectModalProps {
   setConnectionProgress: Dispatch<SetStateAction<ConnectionProgress>>;
   opened: boolean;
   close: () => void;
+  retryRequest: () => void;
+  submitRequest: () => void;
 }
 
 export interface TokenPurchaseModalProps extends WalletConnectModalProps {
@@ -20,4 +22,11 @@ export interface TokenPurchaseModalProps extends WalletConnectModalProps {
   stageTokenPrice: number;
   totalPriceOfPurchase: number;
   walletMaticBalance: number;
+}
+
+export interface ModalErrorStateProps {
+  connectionProgress: ConnectionProgress;
+  retryRequest: () => void;
+  cancelErrorText: string;
+  isWalletConnectionRequest?: boolean;
 }

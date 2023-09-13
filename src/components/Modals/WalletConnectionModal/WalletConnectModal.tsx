@@ -1,12 +1,15 @@
-import { Button, Text, Image, Modal, Flex, ActionIcon, Title } from '@mantine/core';
-import { IconRotateClockwise } from '@tabler/icons-react';
+import { Button, Text, Image, Modal, Flex, Title } from '@mantine/core';
 import { ConnectionProgress, WalletConnectModalProps } from '@/components/Modals/ModalTypes';
+import ModalErrorState from '@/components/Modals/ModalProgressStates/ModalErrorState';
 
 const WalletConnectModal: React.FC<WalletConnectModalProps> = ({
   opened,
   close,
   connectionProgress,
   setConnectionProgress,
+
+  retryRequest,
+  submitRequest,
 }) => (
   <Modal
     opened={opened}
@@ -37,7 +40,12 @@ const WalletConnectModal: React.FC<WalletConnectModalProps> = ({
               justifyContent: 'space-between',
             },
           }}
-          onClick={() => setConnectionProgress(ConnectionProgress.CONNECTING)}
+          onClick={() => {
+            setConnectionProgress(ConnectionProgress.CONNECTING);
+
+            //TODO: Add wallet connection request here
+            submitRequest();
+          }}
         />
       </>
     )}
@@ -89,47 +97,18 @@ const WalletConnectModal: React.FC<WalletConnectModalProps> = ({
     )}
 
     {/* user rejected the connection request  */}
-    {connectionProgress === ConnectionProgress.REJECTED && (
+    {(connectionProgress === ConnectionProgress.REJECTED ||
+      connectionProgress === ConnectionProgress.ERROR) && (
       <>
         <Title color="white" fw="bold" fz="xl" align="center">
           MetaMask
         </Title>
-        <Flex
-          mih={50}
-          gap="md"
-          justify="flex-start"
-          align="center"
-          direction="column"
-          wrap="wrap"
-          mt="xl"
-        >
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: '50%',
-              border: '3px solid red',
-              padding: '10px',
-              width: '6.25rem',
-              height: '6.25rem',
-            }}
-          >
-            {' '}
-            <Image maw={64} mx="auto" radius="md" src="/metamaskIcon.svg" alt="metamask icon" />
-          </div>
-          <Text fz="lg" fw="bold" color="white">
-            Request cancelled
-          </Text>
-          <Text align="center">
-            You cancelled the request.
-            <br /> Click below to retry
-          </Text>
-
-          <ActionIcon size="xl" radius="xl" variant="filled">
-            <IconRotateClockwise size="2.125rem" />
-          </ActionIcon>
-        </Flex>
+        <ModalErrorState
+          connectionProgress={connectionProgress}
+          retryRequest={retryRequest}
+          cancelErrorText="You cancelled the connection request."
+          isWalletConnectionRequest
+        />
       </>
     )}
   </Modal>

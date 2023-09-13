@@ -1,6 +1,6 @@
-import { Button, Text, Image, Modal, Flex, ActionIcon, Box, Group, Title } from '@mantine/core';
-import { IconRotateClockwise } from '@tabler/icons-react';
+import { Button, Text, Image, Modal, Flex, Box, Group, Title } from '@mantine/core';
 import { TokenPurchaseModalProps, ConnectionProgress } from '@/components/Modals/ModalTypes';
+import ModalErrorState from '@/components/Modals/ModalProgressStates/ModalErrorState';
 
 const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
   opened,
@@ -11,6 +11,9 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
   tokenAmount,
   walletMaticBalance,
   stageTokenPrice,
+
+  retryRequest,
+  submitRequest,
 }) => (
   <Modal
     opened={opened}
@@ -89,7 +92,12 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
           backgroundColor: '#CAFC36',
           color: '#000000',
         }}
-        onClick={() => setConnectionProgress(ConnectionProgress.CONNECTING)}
+        onClick={() => {
+          setConnectionProgress(ConnectionProgress.CONNECTING);
+
+          // TODO: Logic coming soon
+          submitRequest();
+        }}
       >
         <Text fz="md">Continue</Text>
       </Button>
@@ -98,9 +106,6 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
     {/* connection request initiated. Awaiting user approval from extension  */}
     {connectionProgress === ConnectionProgress.CONNECTING && (
       <>
-        <Text color="white" fw="bold" fz="xl" align="center">
-          MetaMask
-        </Text>
         <Flex
           mih={50}
           gap="md"
@@ -136,54 +141,21 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
           <Text fz="lg" fw="bold" color="white">
             Requesting connection
           </Text>
-          <Text align="center">Please approve the request from your MetaMask extension</Text>
+          <Text align="center">
+            Please approve this purchase request from your MetaMask extension
+          </Text>
         </Flex>
       </>
     )}
 
     {/* user rejected the connection request  */}
-    {connectionProgress === ConnectionProgress.REJECTED && (
-      <>
-        <Text color="white" fw="bold" fz="xl" align="center">
-          MetaMask
-        </Text>
-        <Flex
-          mih={50}
-          gap="md"
-          justify="flex-start"
-          align="center"
-          direction="column"
-          wrap="wrap"
-          mt="xl"
-        >
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: '50%',
-              border: '3px solid red',
-              padding: '10px',
-              width: '6.25rem',
-              height: '6.25rem',
-            }}
-          >
-            {' '}
-            <Image maw={64} mx="auto" radius="md" src="/metamaskIcon.svg" alt="metamask icon" />
-          </div>
-          <Text fz="lg" fw="bold" color="white">
-            Request cancelled
-          </Text>
-          <Text align="center">
-            You cancelled the request.
-            <br /> Click below to retry
-          </Text>
-
-          <ActionIcon size="xl" radius="xl" variant="filled">
-            <IconRotateClockwise size="2.125rem" />
-          </ActionIcon>
-        </Flex>
-      </>
+    {(connectionProgress === ConnectionProgress.REJECTED ||
+      connectionProgress === ConnectionProgress.ERROR) && (
+      <ModalErrorState
+        connectionProgress={connectionProgress}
+        retryRequest={retryRequest}
+        cancelErrorText="You cancelled the purchase request."
+      />
     )}
   </Modal>
 );

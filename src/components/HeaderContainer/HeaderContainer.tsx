@@ -3,16 +3,28 @@ import { IconLogout } from '@tabler/icons-react';
 import { useDisclosure } from '@mantine/hooks';
 import { useState } from 'react';
 import { formatAddress } from '@/utils/formatAddress';
-import WalletConnectModal from '@/components/Modals/WalletConnectModal';
+import WalletConnectModal from '@/components/Modals/WalletConnectionModal/WalletConnectModal';
 import { ConnectionProgress } from '@/components/Modals/ModalTypes';
 
 const address = '0x0574DB630bb75DBe4310fbd6eB08Dc47048b6fad';
 
 const HeaderContainer: React.FC<{ walletConnected: boolean }> = ({ walletConnected }) => {
   const [connectionProgress, setConnectionProgress] = useState<ConnectionProgress>(
-    ConnectionProgress.PENDING
+    ConnectionProgress.REJECTED
   );
   const [opened, { open, close }] = useDisclosure(false);
+
+  //TODO: submit wallet connection request
+  const submitConnectionRequest = () => {
+    console.log('Now connecting to wallet');
+  };
+
+  // TODO: retry wallet connection
+  const retryWalletConnection = () => {
+    setConnectionProgress(ConnectionProgress.CONNECTING);
+    console.log('Retrying wallet connection');
+  };
+
   return (
     <div>
       <Container size="lg">
@@ -57,6 +69,8 @@ const HeaderContainer: React.FC<{ walletConnected: boolean }> = ({ walletConnect
         close={close}
         connectionProgress={connectionProgress}
         setConnectionProgress={setConnectionProgress}
+        retryRequest={retryWalletConnection}
+        submitRequest={submitConnectionRequest}
       />
     </div>
   );
