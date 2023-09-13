@@ -3,7 +3,8 @@ import { IconLogout } from '@tabler/icons-react';
 import { useDisclosure } from '@mantine/hooks';
 import { useState } from 'react';
 import { formatAddress } from '@/utils/formatAddress';
-import WalletConnectModal, { ConnectionProgress } from '@/components/Modals/WalletConnectModal';
+import WalletConnectModal from '@/components/Modals/WalletConnectModal';
+import { ConnectionProgress } from '@/components/Modals/ModalTypes';
 
 const address = '0x0574DB630bb75DBe4310fbd6eB08Dc47048b6fad';
 

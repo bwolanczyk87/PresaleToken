@@ -12,13 +12,24 @@ import {
   Group,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
+import { useDisclosure } from '@mantine/hooks';
+import { useState } from 'react';
+import { ConnectionProgress } from '@/components/Modals/ModalTypes';
 import HeaderContainer from '@/components/HeaderContainer/HeaderContainer';
+import TokenPurchaseModal from '@/components/Modals/TokenPurchaseModal/TokenPurchaseModal';
 
 export default function HomePage() {
   //TODO: Fetch these values dynamically
   const walletMaticBalance = 1.5099;
   const stageTokenPrice = 0.0001;
   const stageTokenSupply = 99000;
+
+  // open/close states for token purchase modal
+  const [opened, { open, close }] = useDisclosure(false);
+  const [connectionProgress, setConnectionProgress] = useState<ConnectionProgress>(
+    ConnectionProgress.PENDING
+  );
+
   const form = useForm({
     initialValues: {
       tokenAmount: '',
@@ -43,6 +54,13 @@ export default function HomePage() {
       },
     },
   });
+
+  // submit form data to purchase token
+  const handlePurchaseSubmit = (value: string) => {
+    // open modal to confirm amounts
+    open();
+    console.log({ tokenAmount: value });
+  };
 
   const totalPriceOfPurchase = +form.values.tokenAmount * stageTokenPrice;
   const insufficientBalance = totalPriceOfPurchase > walletMaticBalance;
@@ -231,7 +249,9 @@ export default function HomePage() {
 
               {/* form with input and submit */}
               <Box w="100%" mx="auto">
-                <form onSubmit={form.onSubmit((values) => console.log(values))}>
+                <form
+                  onSubmit={form.onSubmit((values) => handlePurchaseSubmit(values.tokenAmount))}
+                >
                   <TextInput
                     placeholder="Enter token amount"
                     radius="md"
@@ -239,6 +259,7 @@ export default function HomePage() {
                     my="1rem"
                     w="100%"
                     min={1}
+                    step="0.00001"
                     {...form.getInputProps('tokenAmount')}
                     type="number"
                     styles={{
@@ -311,6 +332,18 @@ export default function HomePage() {
             </Flex>
           </Grid.Col>
         </Grid>
+
+        {/* token purchase modal  */}
+        <TokenPurchaseModal
+          opened={opened}
+          close={close}
+          connectionProgress={connectionProgress}
+          setConnectionProgress={setConnectionProgress}
+          tokenAmount={form.values.tokenAmount}
+          walletMaticBalance={walletMaticBalance}
+          stageTokenPrice={stageTokenPrice}
+          totalPriceOfPurchase={totalPriceOfPurchase}
+        />
       </Container>
     </AppShell>
   );
