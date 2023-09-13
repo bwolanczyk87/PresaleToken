@@ -55,7 +55,7 @@ const ModalErrorState: React.FC<ModalErrorStateProps> = ({
     {/* show link to etherscan contract call for error cases  */}
     {connectionProgress === ConnectionProgress.ERROR && !isWalletConnectionRequest && (
       <Anchor href="https://mantine.dev/" target="_blank">
-        View on Etherscan
+        View on Polygonscan
       </Anchor>
     )}
 

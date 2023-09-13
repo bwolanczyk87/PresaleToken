@@ -121,7 +121,9 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
     )}
 
     {/* token purchse was a success  */}
-    {connectionProgress === ConnectionProgress.SUCCESS && <ModalSuccessState closeModal={close} />}
+    {connectionProgress === ConnectionProgress.SUCCESS && (
+      <ModalSuccessState closeModal={close} tokenAmount={tokenAmount} />
+    )}
   </Modal>
 );
 

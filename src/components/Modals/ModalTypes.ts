@@ -37,4 +37,5 @@ export interface ModalConnectingStateProps {
 
 export interface ModalSuccessStateProps {
   closeModal: () => void;
+  tokenAmount: string;
 }

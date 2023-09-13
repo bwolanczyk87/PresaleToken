@@ -4,9 +4,10 @@ import { ModalSuccessStateProps } from '@/components/Modals/ModalTypes';
 /**
  * Modal section to show success upon token purchase
  * @prop closeModal - function to close the modal
+ * @prop tokenAmount - amount of tokens purchased
  * @returns React node
  */
-const ModalSuccessState: React.FC<ModalSuccessStateProps> = ({ closeModal }) => (
+const ModalSuccessState: React.FC<ModalSuccessStateProps> = ({ closeModal, tokenAmount }) => (
   <Flex
     mih={50}
     gap="md"
@@ -34,11 +35,11 @@ const ModalSuccessState: React.FC<ModalSuccessStateProps> = ({ closeModal }) => 
     <Text fz="lg" fw="bold" color="white">
       Request successful
     </Text>
-    <Text align="center">You just purchased some awesome TSTK tokens.</Text>
+    <Text align="center">You just purchased {tokenAmount} TSTK tokens.</Text>
 
     {/* show link to etherscan contract call for confirmation  */}
     <Anchor href="https://mantine.dev/" target="_blank">
-      View on Etherscan
+      View on Polygonscan
     </Anchor>
 
     <Button
