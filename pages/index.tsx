@@ -11,16 +11,25 @@ import {
   Box,
   Group,
 } from '@mantine/core';
+import { useBalance, useAccount } from 'wagmi';
 import { useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ConnectionProgress } from '@/components/Modals/ModalTypes';
 import HeaderContainer from '@/components/HeaderContainer/HeaderContainer';
 import TokenPurchaseModal from '@/components/Modals/TokenPurchaseModal/TokenPurchaseModal';
+import WalletConnectButton from '@/components/WalletConnectButton/WalletConnectButton';
 
 export default function HomePage() {
-  //TODO: Fetch these values dynamically
-  const walletMaticBalance = 1.5099;
+  // fetch connected account address from localStorage
+  const { address, isDisconnected } = useAccount();
+
+  // get account balance
+  const { data } = useBalance({
+    address,
+  });
+
+  // TODO: To get from smart contract
   const stageTokenPrice = 0.0001;
   const stageTokenSupply = 99000;
 
@@ -29,6 +38,12 @@ export default function HomePage() {
   const [connectionProgress, setConnectionProgress] = useState<ConnectionProgress>(
     ConnectionProgress.SUCCESS
   );
+  const [walletMaticBalance, setWalletMaticBalance] = useState(0);
+
+  useEffect(() => {
+    if (!data?.formatted) return;
+    setWalletMaticBalance(+data.formatted);
+  }, [data?.formatted]);
 
   const form = useForm({
     initialValues: {
@@ -291,19 +306,23 @@ export default function HomePage() {
                   />
 
                   {/* button to submit  */}
-                  <Button
-                    radius="md"
-                    size="lg"
-                    uppercase
-                    style={{
-                      backgroundColor: '#CAFC36',
-                      color: '#000000',
-                    }}
-                    fullWidth
-                    type="submit"
-                  >
-                    <Text fz="md">buy TSTK Tokens</Text>
-                  </Button>
+                  {isDisconnected ? (
+                    <WalletConnectButton text="Connect wallet to buy" size="lg" isFullWidth />
+                  ) : (
+                    <Button
+                      radius="md"
+                      size="lg"
+                      uppercase
+                      style={{
+                        backgroundColor: '#CAFC36',
+                        color: '#000000',
+                      }}
+                      fullWidth
+                      type="submit"
+                    >
+                      <Text fz="md">buy TSTK Tokens</Text>
+                    </Button>
+                  )}
                 </form>
               </Box>
               <Box
