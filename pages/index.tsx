@@ -16,11 +16,12 @@ import { useBalance, useAccount, useContractReads } from 'wagmi';
 import { useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { useState, useEffect } from 'react';
-import { ConnectionProgress } from '@/components/Modals/ModalTypes';
+import { ConnectionProgress } from '@/components/Modals/types';
 import HeaderContainer from '@/components/HeaderContainer/HeaderContainer';
 import TokenPurchaseModal from '@/components/Modals/TokenPurchaseModal/TokenPurchaseModal';
 import WalletConnectButton from '@/components/WalletConnectButton/WalletConnectButton';
 import CountdownTimer from '@/components/CountdownTimer/CountdownTimer';
+import CurrentStageStats from '@/components/CurrentStageStats/CurrentStageStats';
 
 const ABI = require('@/contract/PresaleContractABI');
 
@@ -50,13 +51,6 @@ export default function HomePage() {
       },
     ],
   });
-
-  // TODO: To get from smart contract
-  // const stageTokenPrice = 0.0001;
-  // const stageTokenSupply = 99000;
-  // const currentStage = 1;
-
-  console.log({ preSaleStageStats, loadingStageStats, errorLoadingStageStats });
 
   // open/close states for token purchase modal
   const [opened, { open, close }] = useDisclosure(false);
@@ -241,47 +235,12 @@ export default function HomePage() {
               <CountdownTimer />
 
               {/* stats about token  */}
-              <Flex
-                mih={50}
-                w="100%"
-                gap="0"
-                justify="center"
-                align="flex-start"
-                direction="column"
-                wrap="wrap"
-              >
-                <div
-                  style={{
-                    width: '100%',
-                    marginTop: '1rem',
-                  }}
-                >
-                  <Text size="1rem" fw={500} color="white">
-                    Presale Supply:{' '}
-                    <span>{currentStageStats.stageTokenSupply.toLocaleString()} TSTK</span>
-                  </Text>
-                </div>
-
-                <div
-                  style={{
-                    width: '100%',
-                  }}
-                >
-                  <Text size="1rem" fw={500} color="white">
-                    Maximum purchase amount: <span>{maxTokensPerStage.toLocaleString()} TSTK</span>
-                  </Text>
-                </div>
-                <div
-                  style={{
-                    width: '100%',
-                    marginTop: '.2rem',
-                  }}
-                >
-                  <Text size="1rem" fw={500} color="white">
-                    Presale Price: <span>{currentStageStats.stageTokenPrice} MATIC</span>
-                  </Text>
-                </div>
-              </Flex>
+              <CurrentStageStats
+                currentStage={currentStageStats.currentStage}
+                stageTokenPrice={currentStageStats.stageTokenPrice}
+                stageTokenSupply={currentStageStats.stageTokenSupply}
+                maxTokensPerStage={maxTokensPerStage}
+              />
 
               {/* form with input and submit */}
               <Box w="100%" mx="auto">

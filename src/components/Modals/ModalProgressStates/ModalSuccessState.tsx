@@ -1,5 +1,5 @@
 import { Text, Image, Flex, Anchor, Button } from '@mantine/core';
-import { ModalSuccessStateProps } from '@/components/Modals/ModalTypes';
+import { ModalSuccessStateProps } from '@/components/Modals/types';
 
 /**
  * Modal section to show success upon token purchase

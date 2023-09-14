@@ -1,5 +1,5 @@
 import { Button, Text, Image, Modal, Flex, Box, Group, Title } from '@mantine/core';
-import { TokenPurchaseModalProps, ConnectionProgress } from '@/components/Modals/ModalTypes';
+import { TokenPurchaseModalProps, ConnectionProgress } from '@/components/Modals/types';
 import ModalErrorState from '@/components/Modals/ModalProgressStates/ModalErrorState';
 import ModalConnectingState from '@/components/Modals/ModalProgressStates/ModalConnectingState';
 import ModalSuccessState from '@/components/Modals/ModalProgressStates/ModalSuccessState';

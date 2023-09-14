@@ -1,6 +1,6 @@
 import { Text, Image, Flex, ActionIcon, Anchor } from '@mantine/core';
 import { IconRotateClockwise } from '@tabler/icons-react';
-import { ConnectionProgress, ModalErrorStateProps } from '@/components/Modals/ModalTypes';
+import { ConnectionProgress, ModalErrorStateProps } from '@/components/Modals/types';
 
 /**
  * Modal section to show an error state when purchasing a token.

@@ -1,5 +1,5 @@
 import { Text, Image, Flex } from '@mantine/core';
-import { ModalConnectingStateProps } from '@/components/Modals/ModalTypes';
+import { ModalConnectingStateProps } from '@/components/Modals/types';
 
 /**
  * Modal section to show state where user is yet to approve Metamask request.
