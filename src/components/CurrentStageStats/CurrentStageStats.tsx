@@ -1,6 +1,12 @@
 import { Flex, Text } from '@mantine/core';
 import { CurrentStageValues } from '@/components/CurrentStageStats/types';
 
+/**
+ * @prop stageTokenPrice - current stage token price
+ * @prop stageTokenSupply - available tokens for the current stage
+ * @prop maxTokensPerStage - maximum tokens a wallet can purchase per stage
+ * @returns
+ */
 const CurrentStageStats: React.FC<CurrentStageValues> = ({
   stageTokenPrice,
   stageTokenSupply,
