@@ -11,7 +11,8 @@ import {
   Box,
   Group,
 } from '@mantine/core';
-import { useBalance, useAccount } from 'wagmi';
+import { useBalance, useAccount, useContractReads } from 'wagmi';
+
 import { useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { useState, useEffect } from 'react';
@@ -20,30 +21,100 @@ import HeaderContainer from '@/components/HeaderContainer/HeaderContainer';
 import TokenPurchaseModal from '@/components/Modals/TokenPurchaseModal/TokenPurchaseModal';
 import WalletConnectButton from '@/components/WalletConnectButton/WalletConnectButton';
 
-export default function HomePage() {
-  // fetch connected account address from localStorage
-  const { address, isDisconnected } = useAccount();
+const ABI = require('@/contract/PresaleContractABI');
 
-  // get account balance
-  const { data } = useBalance({
-    address,
+export default function HomePage() {
+  const preSaleContract = {
+    address: process.env.NEXT_PUBLIC_PRESALE_CONTRACT_ADDRESS as `0x${string}` | undefined,
+    abi: ABI,
+  };
+
+  const {
+    data: preSaleStageStats,
+    isError: errorLoadingStageStats,
+    isLoading: loadingStageStats,
+  } = useContractReads({
+    contracts: [
+      {
+        ...preSaleContract,
+        functionName: 'currentStagePrice',
+      },
+      {
+        ...preSaleContract,
+        functionName: 'currentStage',
+      },
+      {
+        ...preSaleContract,
+        functionName: 'currentStageAvailableAmount',
+      },
+    ],
   });
 
   // TODO: To get from smart contract
-  const stageTokenPrice = 0.0001;
-  const stageTokenSupply = 99000;
+  // const stageTokenPrice = 0.0001;
+  // const stageTokenSupply = 99000;
+  // const currentStage = 1;
+
+  console.log({ preSaleStageStats, loadingStageStats, errorLoadingStageStats });
 
   // open/close states for token purchase modal
   const [opened, { open, close }] = useDisclosure(false);
   const [connectionProgress, setConnectionProgress] = useState<ConnectionProgress>(
     ConnectionProgress.SUCCESS
   );
-  const [walletMaticBalance, setWalletMaticBalance] = useState(0);
+  const [walletBalance, setWalletBalance] = useState<{ matic: number; token: number }>({
+    matic: 0,
+    token: 0,
+  });
+  const [currentStageStats, setCurrentStageStats] = useState<{
+    stageTokenPrice: number;
+    stageTokenSupply: number;
+    currentStage: number;
+  }>({ stageTokenPrice: 0, stageTokenSupply: 0, currentStage: 1 });
 
+  // fetch connected account address from localStorage
+  const { address, isDisconnected } = useAccount();
+
+  // get account MATIC balance
+  const { data: maticData } = useBalance({
+    address,
+  });
+
+  // get account TSTX balance
+  const { data: tokenData } = useBalance({
+    address,
+    token: process.env.NEXT_PUBLIC_TSTK_TOKEN_ADDRESS as `0x${string}` | undefined,
+  });
+
+  // account balance
   useEffect(() => {
-    if (!data?.formatted) return;
-    setWalletMaticBalance(+data.formatted);
-  }, [data?.formatted]);
+    if (!maticData?.formatted || !tokenData?.formatted) return;
+    setWalletBalance((prevState) => ({
+      ...prevState,
+      matic: +maticData.formatted,
+      token: +tokenData.formatted,
+    }));
+  }, [maticData?.formatted, tokenData?.formatted]);
+
+  // stage stats
+  useEffect(() => {
+    if (loadingStageStats || errorLoadingStageStats || !preSaleStageStats) return;
+    setCurrentStageStats((prevState) => {
+      const [price, stage, supply] = preSaleStageStats as {
+        result: number;
+        status: string;
+      }[];
+      return {
+        ...prevState,
+        stageTokenPrice: parseFloat(price.result.toString()) / 10 ** 18,
+        stageTokenSupply: parseFloat(supply.result.toString()) / 10 ** 18,
+        currentStage: stage.result,
+      };
+    });
+  }, [loadingStageStats, errorLoadingStageStats, preSaleStageStats]);
+
+  // getting 1,000,000 from the contract call for this
+  const maxTokensPerStage = 10000;
 
   const form = useForm({
     initialValues: {
@@ -55,14 +126,20 @@ export default function HomePage() {
         if (!value) {
           return 'Token amount required';
         }
+
+        // cannot buy above current stage max amount
+        if (+value > maxTokensPerStage) {
+          return 'Amount exceeds maximum tokens per stage.';
+        }
+
         // cannot buy above current stage token supply
-        if (+value > stageTokenSupply) {
-          return 'Amount exceeds current token supply';
+        if (+value > currentStageStats.stageTokenSupply) {
+          return 'Amount exceeds current token supply.';
         }
 
         // cannot buy with insufficient wallet balance
-        if (+value * stageTokenPrice > walletMaticBalance) {
-          return 'Insufficent funds';
+        if (+value * currentStageStats.stageTokenPrice > walletBalance.matic) {
+          return 'Insufficent funds.';
         }
 
         return null;
@@ -86,11 +163,11 @@ export default function HomePage() {
 
   //TODO: Contract call to purchase token
   const purchaseToken = () => {
-    console.log('We are not making contract call to purchase token');
+    console.log('We are now making contract call to purchase token');
   };
 
-  const totalPriceOfPurchase = +form.values.tokenAmount * stageTokenPrice;
-  const insufficientBalance = totalPriceOfPurchase > walletMaticBalance;
+  const totalPriceOfPurchase = +form.values.tokenAmount * currentStageStats.stageTokenPrice;
+  const insufficientBalance = totalPriceOfPurchase > walletBalance.matic;
 
   return (
     <AppShell
@@ -157,8 +234,8 @@ export default function HomePage() {
               }}
             >
               {/* Countdown timer  */}
-              <Text mb="sm" align="left" size="1.5rem" w="100%" color="white" fw="bold">
-                Presale Stage Ends In:
+              <Text mb="sm" align="left" size="1.3rem" w="100%" color="white" fw="bold">
+                Presale Stage #{currentStageStats.currentStage.toString()} Ends In:
               </Text>
 
               <Grid
@@ -251,25 +328,28 @@ export default function HomePage() {
                   }}
                 >
                   <Text size="1rem" fw={500} color="white">
-                    Presale Stage: <span>#4</span>
+                    Presale Supply:{' '}
+                    <span>{currentStageStats.stageTokenSupply.toLocaleString()} TSTK</span>
                   </Text>
                 </div>
+
                 <div
                   style={{
                     width: '100%',
                   }}
                 >
                   <Text size="1rem" fw={500} color="white">
-                    Presale Supply: <span>{stageTokenSupply.toLocaleString()} TSTK</span>
+                    Maximum purchase amount: <span>{maxTokensPerStage.toLocaleString()} TSTK</span>
                   </Text>
                 </div>
                 <div
                   style={{
                     width: '100%',
+                    marginTop: '.2rem',
                   }}
                 >
                   <Text size="1rem" fw={500} color="white">
-                    Presale Price: <span>{stageTokenPrice} MATIC</span>
+                    Presale Price: <span>{currentStageStats.stageTokenPrice} MATIC</span>
                   </Text>
                 </div>
               </Flex>
@@ -347,7 +427,7 @@ export default function HomePage() {
                     Wallet Balance
                   </Text>
                   <Text size="1rem" fw={600} color="white">
-                    {walletMaticBalance.toFixed(5)} MATIC
+                    {walletBalance.matic.toFixed(5)} MATIC
                   </Text>
                 </Group>
 
@@ -356,7 +436,7 @@ export default function HomePage() {
                     You own
                   </Text>
                   <Text size="1.2rem" fw={600} color="white">
-                    {walletMaticBalance.toFixed(5)} TSTK
+                    {walletBalance.token.toFixed(5)} TSTK
                   </Text>
                 </Group>
               </Box>
@@ -371,8 +451,8 @@ export default function HomePage() {
           connectionProgress={connectionProgress}
           setConnectionProgress={setConnectionProgress}
           tokenAmount={form.values.tokenAmount}
-          walletMaticBalance={walletMaticBalance}
-          stageTokenPrice={stageTokenPrice}
+          walletMaticBalance={walletBalance.matic}
+          stageTokenPrice={currentStageStats.stageTokenPrice ?? 0}
           totalPriceOfPurchase={totalPriceOfPurchase}
           retryRequest={retryTokenPurchase}
           submitRequest={purchaseToken}
