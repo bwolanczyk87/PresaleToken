@@ -20,6 +20,7 @@ import { ConnectionProgress } from '@/components/Modals/ModalTypes';
 import HeaderContainer from '@/components/HeaderContainer/HeaderContainer';
 import TokenPurchaseModal from '@/components/Modals/TokenPurchaseModal/TokenPurchaseModal';
 import WalletConnectButton from '@/components/WalletConnectButton/WalletConnectButton';
+import CountdownTimer from '@/components/CountdownTimer/CountdownTimer';
 
 const ABI = require('@/contract/PresaleContractABI');
 
@@ -237,79 +238,7 @@ export default function HomePage() {
               <Text mb="sm" align="left" size="1.3rem" w="100%" color="white" fw="bold">
                 Presale Stage #{currentStageStats.currentStage.toString()} Ends In:
               </Text>
-
-              <Grid
-                gutter={5}
-                gutterXs="md"
-                gutterMd="xl"
-                gutterXl={20}
-                grow
-                style={{
-                  width: '100%',
-                }}
-                p={0}
-              >
-                <Grid.Col span={4}>
-                  <div
-                    style={{
-                      borderRadius: '0.5rem',
-                      backgroundColor: '#485A16',
-                      padding: '20px',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      display: 'flex',
-                      flexDirection: 'column',
-                    }}
-                  >
-                    <Text fw="bold" size="3rem" color="white">
-                      15
-                    </Text>
-                    <Text fw="bold" size="sm" color="white">
-                      HOURS
-                    </Text>
-                  </div>
-                </Grid.Col>
-                <Grid.Col span={4}>
-                  <div
-                    style={{
-                      borderRadius: '0.5rem',
-                      backgroundColor: '#485A16',
-                      padding: '20px',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      display: 'flex',
-                      flexDirection: 'column',
-                    }}
-                  >
-                    <Text fw="bold" size="3rem" color="white">
-                      09
-                    </Text>
-                    <Text fw="bold" size="sm" color="white">
-                      MINUTES
-                    </Text>
-                  </div>
-                </Grid.Col>
-                <Grid.Col span={4}>
-                  <div
-                    style={{
-                      borderRadius: '0.5rem',
-                      backgroundColor: '#485A16',
-                      padding: '20px',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      display: 'flex',
-                      flexDirection: 'column',
-                    }}
-                  >
-                    <Text fw="bold" size="3rem" color="white">
-                      45
-                    </Text>
-                    <Text fw="bold" size="sm" color="white">
-                      SECONDS
-                    </Text>
-                  </div>
-                </Grid.Col>
-              </Grid>
+              <CountdownTimer />
 
               {/* stats about token  */}
               <Flex
