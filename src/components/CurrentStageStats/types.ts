@@ -1,6 +1,6 @@
 export interface CurrentStageValues {
   stageTokenPrice: number;
   stageTokenSupply: number;
-  currentStage: number;
+  currentStage?: number;
   maxTokensPerStage?: number;
 }

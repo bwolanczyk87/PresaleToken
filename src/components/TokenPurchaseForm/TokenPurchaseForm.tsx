@@ -26,7 +26,7 @@ const TokenPurchaseForm: React.FC<TokenPurchaseModalProps> = ({
 }) => {
   const [opened, { open, close }] = useDisclosure(false);
   const [connectionProgress, setConnectionProgress] = useState<ConnectionProgress>(
-    ConnectionProgress.SUCCESS
+    ConnectionProgress.PENDING
   );
   const { isDisconnected } = useAccount();
 
@@ -62,17 +62,14 @@ const TokenPurchaseForm: React.FC<TokenPurchaseModalProps> = ({
   });
 
   // submit form data to purchase token
-  const handlePurchaseSubmit = (value: string) => {
+  const handlePurchaseSubmit = () => {
     // open modal to confirm amounts
     open();
-    console.log({ tokenAmount: value });
   };
 
   //TODO: Retry token purchase
   const retryTokenPurchase = () => {
     setConnectionProgress(ConnectionProgress.CONNECTING);
-
-    // add more logic
   };
 
   //TODO: Contract call to purchase token
@@ -86,7 +83,7 @@ const TokenPurchaseForm: React.FC<TokenPurchaseModalProps> = ({
   return (
     <>
       <Box w="100%" mx="auto">
-        <form onSubmit={form.onSubmit((values) => handlePurchaseSubmit(values.tokenAmount))}>
+        <form onSubmit={form.onSubmit(handlePurchaseSubmit)}>
           <TextInput
             placeholder="Enter token amount"
             radius="md"

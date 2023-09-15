@@ -87,6 +87,8 @@ export default function HomePage() {
     });
   }, [loadingStageStats, errorLoadingStageStats, preSaleStageStats]);
 
+  console.log({ walletBalance });
+
   // max amount a wallet can purchase per stage
   const maxTokensPerStage = 10000;
 

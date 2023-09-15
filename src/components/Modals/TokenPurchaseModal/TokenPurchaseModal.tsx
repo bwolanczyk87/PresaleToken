@@ -1,130 +1,163 @@
 import { Button, Text, Image, Modal, Flex, Box, Group, Title } from '@mantine/core';
+import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from 'wagmi';
+import { polygonMumbai } from 'wagmi/chains';
+import { useDebounce } from 'usehooks-ts';
+// import { ethers, parseEther } from 'ethers';
 import { TokenPurchaseModalProps, ConnectionProgress } from '@/components/Modals/types';
 import ModalErrorState from '@/components/Modals/ModalProgressStates/ModalErrorState';
 import ModalConnectingState from '@/components/Modals/ModalProgressStates/ModalConnectingState';
 import ModalSuccessState from '@/components/Modals/ModalProgressStates/ModalSuccessState';
 
+const ABI = require('@/contract/PresaleContractABI');
+
 const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
   opened,
   close,
   connectionProgress,
-  setConnectionProgress,
+  // setConnectionProgress,
   totalPriceOfPurchase,
   tokenAmount,
   walletMaticBalance,
   stageTokenPrice,
 
   retryRequest,
-  submitRequest,
-}) => (
-  <Modal
-    opened={opened}
-    onClose={close}
-    withCloseButton={false}
-    centered
-    size="sm"
-    radius="lg"
-    padding="xl"
-  >
-    {/* token and price details to show to the user  */}
-    <Title color="white" fw="bold" fz="xl" mb="xl">
-      Buy TSTK Tokens
-    </Title>
-    <Box
-      sx={{
-        borderRadius: '0.75rem',
-        padding: '20px',
-        width: '100%',
-        backgroundColor: '#25262B',
-      }}
-    >
-      <Text color="white" fw={500}>
-        You pay
-      </Text>
-      <Group position="apart">
-        <Text size="1.2rem" fw={600} color="white">
-          {totalPriceOfPurchase.toFixed(5)}
-        </Text>
-        <Flex gap="xs" align="center">
-          <Image maw={20} mx="auto" src="/polygon-matic-logo.svg" alt="matic icon" />{' '}
-          <Text fw="bold">MATIC</Text>
-        </Flex>
-      </Group>
-      <Group position="right" w="100%" mt=".5rem">
-        <Text size="sm">
-          Balance: <span>{walletMaticBalance.toFixed(5)}</span>
-        </Text>
-      </Group>
-    </Box>
-    <Box
-      sx={{
-        borderRadius: '0.75rem',
-        padding: '20px',
-        width: '100%',
-        backgroundColor: '#25262B',
-        marginTop: '.5rem',
-      }}
-    >
-      <Text color="white" fw={500}>
-        You receive
-      </Text>
-      <Group position="apart">
-        <Text size="1.2rem" fw={600} color="white">
-          {tokenAmount}
-        </Text>
-        <Flex gap="xs">
-          <Image maw={24} mx="auto" src="/tstk-token-symbol.png" alt="tstk icon" />{' '}
-          <Text fw="bold">TSTK</Text>
-        </Flex>
-      </Group>
-      <Group position="right" w="100%" mt=".5rem">
-        <Text size="sm">
-          1 TSTK = <span>{stageTokenPrice.toFixed(5)}</span> MATIC
-        </Text>
-      </Group>
-    </Box>
-    {connectionProgress === ConnectionProgress.PENDING && (
-      <Button
-        radius="md"
-        fullWidth
-        size="lg"
-        mt="md"
-        uppercase
-        style={{
-          backgroundColor: '#CAFC36',
-          color: '#000000',
-        }}
-        onClick={() => {
-          setConnectionProgress(ConnectionProgress.CONNECTING);
+  // submitRequest,
+}) => {
+  const debouncedTokenAmount = useDebounce(tokenAmount, 500);
 
-          // TODO: Logic coming soon
-          submitRequest();
+  // ethers.formatUnits(totalPriceOfPurchase, 18);
+
+  // console.log({ totalPriceOfPurchase: ethers.formatUnits(totalPriceOfPurchase, 18) });
+  const { config } = usePrepareContractWrite({
+    address: process.env.NEXT_PUBLIC_PRESALE_CONTRACT_ADDRESS as `0x${string}` | undefined,
+    abi: ABI,
+    functionName: 'tokenSale',
+    args: [parseInt(debouncedTokenAmount, 10)],
+    // value: parseEther(totalPriceOfPurchase.toString()),
+    enabled: Boolean(debouncedTokenAmount),
+    chainId: polygonMumbai.id,
+  });
+
+  const { data, write } = useContractWrite(config);
+
+  const { isLoading, isSuccess, isError } = useWaitForTransaction({
+    hash: data?.hash,
+  });
+
+  console.log({ isLoading, isSuccess, isError, data });
+
+  return (
+    <Modal
+      opened={opened}
+      onClose={close}
+      withCloseButton={false}
+      centered
+      size="sm"
+      radius="lg"
+      padding="xl"
+    >
+      {/* token and price details to show to the user  */}
+      <Title color="white" fw="bold" fz="xl" mb="xl">
+        Buy TSTK Tokens
+      </Title>
+      <Box
+        sx={{
+          borderRadius: '0.75rem',
+          padding: '20px',
+          width: '100%',
+          backgroundColor: '#25262B',
         }}
       >
-        <Text fz="md">Continue</Text>
-      </Button>
-    )}
+        <Text color="white" fw={500}>
+          You pay
+        </Text>
+        <Group position="apart">
+          <Text size="1.2rem" fw={600} color="white">
+            {totalPriceOfPurchase.toFixed(5)}
+          </Text>
+          <Flex gap="xs" align="center">
+            <Image maw={20} mx="auto" src="/polygon-matic-logo.svg" alt="matic icon" />{' '}
+            <Text fw="bold">MATIC</Text>
+          </Flex>
+        </Group>
+        <Group position="right" w="100%" mt=".5rem">
+          <Text size="sm">
+            Balance: <span>{walletMaticBalance.toFixed(5)}</span>
+          </Text>
+        </Group>
+      </Box>
+      <Box
+        sx={{
+          borderRadius: '0.75rem',
+          padding: '20px',
+          width: '100%',
+          backgroundColor: '#25262B',
+          marginTop: '.5rem',
+        }}
+      >
+        <Text color="white" fw={500}>
+          You receive
+        </Text>
+        <Group position="apart">
+          <Text size="1.2rem" fw={600} color="white">
+            {tokenAmount}
+          </Text>
+          <Flex gap="xs">
+            <Image maw={24} mx="auto" src="/tstk-token-symbol.png" alt="tstk icon" />{' '}
+            <Text fw="bold">TSTK</Text>
+          </Flex>
+        </Group>
+        <Group position="right" w="100%" mt=".5rem">
+          <Text size="sm">
+            1 TSTK = <span>{stageTokenPrice.toFixed(5)}</span> MATIC
+          </Text>
+        </Group>
+      </Box>
+      {connectionProgress === ConnectionProgress.PENDING && (
+        <Button
+          radius="md"
+          fullWidth
+          size="lg"
+          mt="md"
+          uppercase
+          disabled={!write}
+          style={{
+            backgroundColor: '#CAFC36',
+            color: '#000000',
+          }}
+          onClick={() => {
+            // setConnectionProgress(ConnectionProgress.CONNECTING);
+            write?.();
 
-    {/* connection request initiated. Awaiting user approval from extension  */}
-    {connectionProgress === ConnectionProgress.CONNECTING && (
-      <ModalConnectingState connectionRequestText="Please approve this purchase request from your MetaMask extension." />
-    )}
+            // TODO: Logic coming soon
+            // submitRequest();
+          }}
+        >
+          <Text fz="md">Continue</Text>
+        </Button>
+      )}
 
-    {/* user rejected the connection request  */}
-    {(connectionProgress === ConnectionProgress.REJECTED ||
-      connectionProgress === ConnectionProgress.ERROR) && (
-      <ModalErrorState
-        connectionProgress={connectionProgress}
-        retryRequest={retryRequest}
-        cancelErrorText="You cancelled the purchase request."
-      />
-    )}
+      {/* connection request initiated. Awaiting user approval from extension  */}
+      {connectionProgress === ConnectionProgress.CONNECTING && (
+        <ModalConnectingState connectionRequestText="Please approve this purchase request from your MetaMask extension." />
+      )}
 
-    {/* token purchse was a success  */}
-    {connectionProgress === ConnectionProgress.SUCCESS && (
-      <ModalSuccessState closeModal={close} tokenAmount={tokenAmount} />
-    )}
-  </Modal>
-);
+      {/* user rejected the connection request  */}
+      {(connectionProgress === ConnectionProgress.REJECTED ||
+        connectionProgress === ConnectionProgress.ERROR) && (
+        <ModalErrorState
+          connectionProgress={connectionProgress}
+          retryRequest={retryRequest}
+          cancelErrorText="You cancelled the purchase request."
+        />
+      )}
+
+      {/* token purchse was a success  */}
+      {connectionProgress === ConnectionProgress.SUCCESS && (
+        <ModalSuccessState closeModal={close} tokenAmount={tokenAmount} />
+      )}
+    </Modal>
+  );
+};
 
 export default TokenPurchaseModal;
