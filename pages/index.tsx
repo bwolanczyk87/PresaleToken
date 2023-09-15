@@ -100,7 +100,7 @@ export default function HomePage() {
       }}
       header={
         <Header height={80} p="lg">
-          <HeaderContainer walletConnected={false} />
+          <HeaderContainer />
         </Header>
       }
     >

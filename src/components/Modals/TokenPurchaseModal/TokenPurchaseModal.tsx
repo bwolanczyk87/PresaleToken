@@ -9,6 +9,19 @@ import ModalSuccessState from '@/components/Modals/ModalProgressStates/ModalSucc
 
 const ABI = require('@/contract/PresaleContractABI');
 
+/**
+ * Modal to show progress of the token purchase
+ * @prop opened - boolean state to open modal
+ * @prop close - function to close modal
+ * @prop connectionProgress - progress of transaction request
+ * @prop setConnectionProgress - change the progress state of the transaction
+ * @prop totalPriceOfPurchase - total price to purchase given amount of tokens
+ * @prop tokenAmount - amount of tokens to purchase
+ * @prop walletMaticBalance - Matic balance of the current account
+ * @prop stageTokenPrice - price of one token for the current stage.
+ * @returns
+ */
+
 const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
   opened,
   close,

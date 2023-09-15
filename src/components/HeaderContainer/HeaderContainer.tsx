@@ -1,7 +1,12 @@
 import { Container, Group, Image } from '@mantine/core';
 import WalletConnectButton from '@/components/WalletConnectButton/WalletConnectButton';
 
-const HeaderContainer: React.FC<{ walletConnected: boolean }> = () => (
+/**
+ * Header section component.
+ * renders a brand logo and the wallet connect button
+ * @returns
+ */
+const HeaderContainer: React.FC = () => (
   <div>
     <Container size="lg">
       <Group position="apart">
