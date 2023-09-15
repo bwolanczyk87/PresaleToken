@@ -3,7 +3,7 @@
 This is a dApp for the presale of TSTK tokens. The pre-sale runs in 24-hour stages and this app lets you purchase tokens as per the price of the current stage. The app runs on the Polygon Mumbai chain
 
 The application is hosted here:
-[Vercel Link](tstk-beincrypto.vercel.app)
+[Vercel Link](https://tstk-beincrypto.vercel.app/)
 
 
 
