@@ -2,7 +2,6 @@ import { Button, Text, Image, Modal, Flex, Box, Group, Title } from '@mantine/co
 import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from 'wagmi';
 import { polygonMumbai } from 'wagmi/chains';
 import { useDebounce } from 'usehooks-ts';
-// import { ethers, parseEther } from 'ethers';
 import { TokenPurchaseModalProps, ConnectionProgress } from '@/components/Modals/types';
 import ModalErrorState from '@/components/Modals/ModalProgressStates/ModalErrorState';
 import ModalConnectingState from '@/components/Modals/ModalProgressStates/ModalConnectingState';
@@ -14,42 +13,42 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
   opened,
   close,
   connectionProgress,
-  // setConnectionProgress,
+  setConnectionProgress,
   totalPriceOfPurchase,
   tokenAmount,
   walletMaticBalance,
   stageTokenPrice,
-
-  retryRequest,
-  // submitRequest,
 }) => {
   const debouncedTokenAmount = useDebounce(tokenAmount, 500);
 
-  // ethers.formatUnits(totalPriceOfPurchase, 18);
-
-  // console.log({ totalPriceOfPurchase: ethers.formatUnits(totalPriceOfPurchase, 18) });
   const { config } = usePrepareContractWrite({
     address: process.env.NEXT_PUBLIC_PRESALE_CONTRACT_ADDRESS as `0x${string}` | undefined,
     abi: ABI,
     functionName: 'tokenSale',
-    args: [parseInt(debouncedTokenAmount, 10)],
-    // value: parseEther(totalPriceOfPurchase.toString()),
+    args: [BigInt(+tokenAmount * 10 ** 18)],
+
+    value: BigInt(stageTokenPrice * 10 ** 18 * +tokenAmount),
     enabled: Boolean(debouncedTokenAmount),
     chainId: polygonMumbai.id,
   });
 
-  const { data, write } = useContractWrite(config);
+  const { data, write, reset } = useContractWrite(config);
 
   const { isLoading, isSuccess, isError } = useWaitForTransaction({
     hash: data?.hash,
   });
 
-  console.log({ isLoading, isSuccess, isError, data });
+  // reset modal state when modal is closed.
+  const handleClose = () => {
+    setConnectionProgress(ConnectionProgress.PENDING);
+    close();
+    reset();
+  };
 
   return (
     <Modal
       opened={opened}
-      onClose={close}
+      onClose={handleClose}
       withCloseButton={false}
       centered
       size="sm"
@@ -126,11 +125,8 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
             color: '#000000',
           }}
           onClick={() => {
-            // setConnectionProgress(ConnectionProgress.CONNECTING);
+            setConnectionProgress(ConnectionProgress.CONNECTING);
             write?.();
-
-            // TODO: Logic coming soon
-            // submitRequest();
           }}
         >
           <Text fz="md">Continue</Text>
@@ -138,23 +134,32 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
       )}
 
       {/* connection request initiated. Awaiting user approval from extension  */}
-      {connectionProgress === ConnectionProgress.CONNECTING && (
-        <ModalConnectingState connectionRequestText="Please approve this purchase request from your MetaMask extension." />
-      )}
+      {connectionProgress === ConnectionProgress.CONNECTING &&
+        !isLoading &&
+        !isSuccess &&
+        !isError && (
+          <ModalConnectingState connectionRequestText="Please approve this purchase request from your wallet." />
+        )}
 
-      {/* user rejected the connection request  */}
-      {(connectionProgress === ConnectionProgress.REJECTED ||
-        connectionProgress === ConnectionProgress.ERROR) && (
-        <ModalErrorState
-          connectionProgress={connectionProgress}
-          retryRequest={retryRequest}
-          cancelErrorText="You cancelled the purchase request."
+      {/* request approved by user. processing transaction  */}
+      {isLoading && (
+        <ModalConnectingState
+          titleText="Buying tokens"
+          connectionRequestText="Purchasing your awesome tokens."
+          isInProgress
         />
       )}
 
-      {/* token purchse was a success  */}
-      {connectionProgress === ConnectionProgress.SUCCESS && (
-        <ModalSuccessState closeModal={close} tokenAmount={tokenAmount} />
+      {/* transaction has an error  */}
+      {isError && <ModalErrorState />}
+
+      {/* token purchase was a success  */}
+      {isSuccess && !isLoading && (
+        <ModalSuccessState
+          closeModal={handleClose}
+          tokenAmount={tokenAmount}
+          transactionHash={data?.hash}
+        />
       )}
     </Modal>
   );

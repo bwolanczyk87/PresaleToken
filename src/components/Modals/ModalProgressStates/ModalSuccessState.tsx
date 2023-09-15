@@ -5,9 +5,14 @@ import { ModalSuccessStateProps } from '@/components/Modals/types';
  * Modal section to show success upon token purchase
  * @prop closeModal - function to close the modal
  * @prop tokenAmount - amount of tokens purchased
+ * @props transactionHash - transaction hash
  * @returns React node
  */
-const ModalSuccessState: React.FC<ModalSuccessStateProps> = ({ closeModal, tokenAmount }) => (
+const ModalSuccessState: React.FC<ModalSuccessStateProps> = ({
+  closeModal,
+  tokenAmount,
+  transactionHash,
+}) => (
   <Flex
     mih={50}
     gap="md"
@@ -30,7 +35,7 @@ const ModalSuccessState: React.FC<ModalSuccessStateProps> = ({ closeModal, token
       }}
     >
       {' '}
-      <Image maw={64} mx="auto" radius="md" src="/metamaskIcon.svg" alt="metamask icon" />
+      <Image maw={64} mx="auto" radius="md" src="/success.svg" alt="success icon" />
     </div>
     <Text fz="lg" fw="bold" color="white">
       Request successful
@@ -38,14 +43,17 @@ const ModalSuccessState: React.FC<ModalSuccessStateProps> = ({ closeModal, token
     <Text align="center">You just purchased {tokenAmount} TSTK tokens.</Text>
 
     {/* show link to etherscan contract call for confirmation  */}
-    <Anchor href="https://mantine.dev/" target="_blank">
-      View on Polygonscan
-    </Anchor>
+    {Boolean(transactionHash) && (
+      <Anchor href={`https://mumbai.polygonscan.com/tx/${transactionHash}`} target="_blank">
+        View on Polygonscan
+      </Anchor>
+    )}
 
     <Button
       radius="md"
       uppercase
       fullWidth
+      size="lg"
       style={{
         backgroundColor: '#CAFC36',
         color: '#000000',

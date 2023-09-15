@@ -24,18 +24,14 @@ export interface TokenPurchaseModalProps extends WalletConnectModalProps {
   walletMaticBalance: number;
 }
 
-export interface ModalErrorStateProps {
-  connectionProgress: ConnectionProgress;
-  retryRequest: () => void;
-  cancelErrorText: string;
-  isWalletConnectionRequest?: boolean;
-}
-
 export interface ModalConnectingStateProps {
+  isInProgress?: boolean;
+  titleText?: string;
   connectionRequestText: string;
 }
 
 export interface ModalSuccessStateProps {
+  transactionHash?: string;
   closeModal: () => void;
   tokenAmount: string;
 }

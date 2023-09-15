@@ -1,22 +1,11 @@
-import { Text, Image, Flex, ActionIcon, Anchor } from '@mantine/core';
-import { IconRotateClockwise } from '@tabler/icons-react';
-import { ConnectionProgress, ModalErrorStateProps } from '@/components/Modals/types';
+import { Text, Image, Flex } from '@mantine/core';
 
 /**
  * Modal section to show an error state when purchasing a token.
- * @prop connectionProgress - state to indicate the error state
- * @prop retryRequest - function to retry the failed request
- * @prop cancelErrorText - Error text to show when request is cancelled
- * @prop isWalletConnectionRequest - whether the request is from a wallet connection
  * @returns React node
  */
 
-const ModalErrorState: React.FC<ModalErrorStateProps> = ({
-  connectionProgress,
-  retryRequest,
-  cancelErrorText,
-  isWalletConnectionRequest = false,
-}) => (
+const ModalErrorState: React.FC = () => (
   <Flex
     mih={50}
     gap="md"
@@ -39,28 +28,12 @@ const ModalErrorState: React.FC<ModalErrorStateProps> = ({
       }}
     >
       {' '}
-      <Image maw={64} mx="auto" radius="md" src="/metamaskIcon.svg" alt="metamask icon" />
+      <Image maw={64} mx="auto" radius="md" src="/error.svg" alt="error icon" />
     </div>
     <Text fz="lg" fw="bold" color="white">
-      {connectionProgress === ConnectionProgress.ERROR ? 'An error occured' : 'Request cancelled'}
+      An error occured
     </Text>
-    <Text align="center">
-      {connectionProgress === ConnectionProgress.ERROR
-        ? 'There was a problem with the request.'
-        : cancelErrorText}
-      <br /> Click below to retry
-    </Text>
-
-    {/* show link to etherscan contract call for error cases  */}
-    {connectionProgress === ConnectionProgress.ERROR && !isWalletConnectionRequest && (
-      <Anchor href="https://mantine.dev/" target="_blank">
-        View on Polygonscan
-      </Anchor>
-    )}
-
-    <ActionIcon size="xl" radius="xl" variant="filled" onClick={retryRequest}>
-      <IconRotateClockwise size="2.125rem" />
-    </ActionIcon>
+    <Text align="center">Your request was cancelled or something just did not work.</Text>
   </Flex>
 );
 

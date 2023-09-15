@@ -2,11 +2,17 @@ import { Text, Image, Flex } from '@mantine/core';
 import { ModalConnectingStateProps } from '@/components/Modals/types';
 
 /**
- * Modal section to show state where user is yet to approve Metamask request.
+ * Modal section to show state where user is yet to approve transaction request.
+ * @prop titleText - Text to show as title
  * @prop connectionRequestText - text to show while awaiting user approval of request
+ * @props isInProgress - whether to show an in progress state
  * @returns React node
  */
-const ModalConnectingState: React.FC<ModalConnectingStateProps> = ({ connectionRequestText }) => (
+const ModalConnectingState: React.FC<ModalConnectingStateProps> = ({
+  connectionRequestText,
+  titleText = 'Requesting connection',
+  isInProgress = false,
+}) => (
   <Flex
     mih={50}
     gap="md"
@@ -26,8 +32,8 @@ const ModalConnectingState: React.FC<ModalConnectingStateProps> = ({ connectionR
         maw={64}
         mx="auto"
         radius="md"
-        src="/metamaskIcon.svg"
-        alt="metamask icon"
+        src={isInProgress ? '/inProgress.svg' : '/walletApprove.svg'}
+        alt="icon"
         styles={{
           root: {
             position: 'absolute',
@@ -40,7 +46,7 @@ const ModalConnectingState: React.FC<ModalConnectingStateProps> = ({ connectionR
       />
     </div>
     <Text fz="lg" fw="bold" color="white">
-      Requesting connection
+      {titleText}
     </Text>
     <Text align="center">{connectionRequestText}</Text>
   </Flex>
