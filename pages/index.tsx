@@ -87,9 +87,8 @@ export default function HomePage() {
     });
   }, [loadingStageStats, errorLoadingStageStats, preSaleStageStats]);
 
-  console.log({ walletBalance });
-
   // max amount a wallet can purchase per stage
+  //TODO: get this from contract
   const maxTokensPerStage = 10000;
 
   return (
@@ -107,11 +106,11 @@ export default function HomePage() {
     >
       <Container size="lg" pt="xl">
         <Grid gutter={5} gutterXs="md" gutterMd="xl" gutterXl={120}>
-          <Grid.Col span={6}>
+          <Grid.Col xs={12} sm={6}>
             <TstkBanner />
           </Grid.Col>
 
-          <Grid.Col span={6}>
+          <Grid.Col xs={12} sm={6}>
             <Flex
               mih={50}
               gap="md"
