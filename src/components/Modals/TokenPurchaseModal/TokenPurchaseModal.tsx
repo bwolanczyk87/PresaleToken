@@ -7,7 +7,7 @@ import { TokenPurchaseModalProps, ConnectionProgress } from '@/components/Modals
 import ModalErrorState from '@/components/Modals/ModalProgressStates/ModalErrorState/ModalErrorState';
 import ModalConnectingState from '@/components/Modals/ModalProgressStates/ModalConnectingState/ModalConnectingState';
 import ModalSuccessState from '@/components/Modals/ModalProgressStates/ModalSuccessState';
-import ModalPurchaseDetails from '@/components/Modals/ModalProgressStates/ModalPurchaseDetails';
+import ModalPurchaseDetails from '@/components/Modals/ModalProgressStates/ModalPurchaseDetails/ModalPurchaseDetails';
 
 const ABI = require('@/contract/PresaleContractABI');
 
