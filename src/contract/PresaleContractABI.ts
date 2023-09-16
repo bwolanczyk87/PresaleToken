@@ -1,4 +1,4 @@
-const abi = [
+export const ABI = [
   {
     inputs: [{ internalType: 'address', name: '_saleToken', type: 'address' }],
     stateMutability: 'nonpayable',
@@ -204,5 +204,3 @@ const abi = [
     type: 'function',
   },
 ];
-
-module.exports = abi;

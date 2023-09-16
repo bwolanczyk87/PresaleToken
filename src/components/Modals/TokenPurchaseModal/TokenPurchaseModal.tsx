@@ -8,8 +8,8 @@ import ModalErrorState from '@/components/Modals/ModalProgressStates/ModalErrorS
 import ModalConnectingState from '@/components/Modals/ModalProgressStates/ModalConnectingState/ModalConnectingState';
 import ModalSuccessState from '@/components/Modals/ModalProgressStates/ModalSuccessState/ModalSuccessState';
 import ModalPurchaseDetails from '@/components/Modals/ModalProgressStates/ModalPurchaseDetails/ModalPurchaseDetails';
-
-const ABI = require('@/contract/PresaleContractABI');
+import useGetAccountBalances from '@/hooks/useGetAccountBalances';
+import { ABI } from '@/contract/PresaleContractABI';
 
 /**
  * Modal to show progress of the token purchase
@@ -36,6 +36,8 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
 }) => {
   const debouncedTokenAmount = useDebounce(tokenAmount, 500);
   const tokenDecimals = 18;
+
+  const { refetchMaticBalance, refetchTokenBalance } = useGetAccountBalances();
 
   const { config } = usePrepareContractWrite({
     address: process.env.NEXT_PUBLIC_PRESALE_CONTRACT_ADDRESS as `0x${string}` | undefined,
@@ -74,6 +76,10 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
       setConnectionProgress(ConnectionProgress.ERROR);
     } else if (isSuccess) {
       setConnectionProgress(ConnectionProgress.SUCCESS);
+
+      // refetch account balances
+      refetchMaticBalance();
+      refetchTokenBalance();
     } else {
       setConnectionProgress(ConnectionProgress.NOT_STARTED);
     }

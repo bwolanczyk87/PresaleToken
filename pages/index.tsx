@@ -1,95 +1,21 @@
 import { AppShell, Header, Flex, Text, Container, Grid } from '@mantine/core';
-import { useBalance, useAccount, useContractReads } from 'wagmi';
-import { useState, useEffect } from 'react';
 import HeaderContainer from '@/components/HeaderContainer/HeaderContainer';
 import CountdownTimer from '@/components/CountdownTimer/CountdownTimer';
 import CurrentStageStats from '@/components/CurrentStageStats/CurrentStageStats';
 import TokenPurchaseForm from '@/components/TokenPurchaseForm/TokenPurchaseForm';
 import TstkBanner from '@/components/TstkBanner/TstkBanner';
-
-const ABI = require('@/contract/PresaleContractABI');
+import useGetCurrentStageStats from '@/hooks/useGetCurrentStageStats';
+import useGetAccountBalances from '@/hooks/useGetAccountBalances';
 
 export default function HomePage() {
-  const preSaleContract = {
-    address: process.env.NEXT_PUBLIC_PRESALE_CONTRACT_ADDRESS as `0x${string}` | undefined,
-    abi: ABI,
-  };
-
   const {
-    data: preSaleStageStats,
-    isError: errorLoadingStageStats,
-    isLoading: loadingStageStats,
-  } = useContractReads({
-    contracts: [
-      {
-        ...preSaleContract,
-        functionName: 'currentStagePrice',
-      },
-      {
-        ...preSaleContract,
-        functionName: 'currentStage',
-      },
-      {
-        ...preSaleContract,
-        functionName: 'currentStageAvailableAmount',
-      },
-    ],
-  });
-
-  const [walletBalance, setWalletBalance] = useState<{ matic: number; token: number }>({
-    matic: 0,
-    token: 0,
-  });
-  const [currentStageStats, setCurrentStageStats] = useState<{
-    stageTokenPrice: number;
-    stageTokenSupply: number;
-    currentStage: number;
-  }>({ stageTokenPrice: 0, stageTokenSupply: 0, currentStage: 1 });
-
-  // get connected account
-  const { address } = useAccount();
-
-  // get account MATIC balance
-  const { data: maticData } = useBalance({
-    address,
-  });
-
-  // get account TSTX balance
-  const { data: tokenData } = useBalance({
-    address,
-    token: process.env.NEXT_PUBLIC_TSTK_TOKEN_ADDRESS as `0x${string}` | undefined,
-  });
-
-  // account balance
-  useEffect(() => {
-    if (!maticData?.formatted || !tokenData?.formatted) return;
-    setWalletBalance((prevState) => ({
-      ...prevState,
-      matic: +maticData.formatted,
-      token: +tokenData.formatted,
-    }));
-  }, [maticData?.formatted, tokenData?.formatted]);
-
-  // stage stats
-  useEffect(() => {
-    if (loadingStageStats || errorLoadingStageStats || !preSaleStageStats) return;
-    setCurrentStageStats((prevState) => {
-      const [price, stage, supply] = preSaleStageStats as {
-        result: number;
-        status: string;
-      }[];
-      return {
-        ...prevState,
-        stageTokenPrice: parseFloat(price.result.toString()) / 10 ** 18,
-        stageTokenSupply: parseFloat(supply.result.toString()) / 10 ** 18,
-        currentStage: stage.result,
-      };
-    });
-  }, [loadingStageStats, errorLoadingStageStats, preSaleStageStats]);
-
-  // max amount a wallet can purchase per stage
-  //TODO: get this from contract
-  const maxTokensPerStage = 10000;
+    currentStage,
+    currentStageStartTime,
+    stageTokenPrice,
+    stageTokenSupply,
+    maxTokensPerStage,
+  } = useGetCurrentStageStats();
+  const { maticBalance, tokenBalance } = useGetAccountBalances();
 
   return (
     <AppShell
@@ -126,25 +52,25 @@ export default function HomePage() {
             >
               {/* Countdown timer  */}
               <Text mb="sm" align="left" size="1.3rem" w="100%" color="white" fw="bold">
-                Presale Stage #{currentStageStats.currentStage.toString()} Ends In:
+                Presale Stage #{currentStage.toString()} Ends In:
               </Text>
-              <CountdownTimer />
+              <CountdownTimer currentStageStartTime={currentStageStartTime} />
 
               {/* stats about current stage  */}
               <CurrentStageStats
-                currentStage={currentStageStats.currentStage}
-                stageTokenPrice={currentStageStats.stageTokenPrice}
-                stageTokenSupply={currentStageStats.stageTokenSupply}
+                currentStage={currentStage}
+                stageTokenPrice={stageTokenPrice}
+                stageTokenSupply={stageTokenSupply}
                 maxTokensPerStage={maxTokensPerStage}
               />
 
               {/* form with input and submit button along with transaction modal */}
               <TokenPurchaseForm
-                stageTokenPrice={currentStageStats.stageTokenPrice}
-                stageTokenSupply={currentStageStats.stageTokenSupply}
+                stageTokenPrice={stageTokenPrice}
+                stageTokenSupply={stageTokenSupply}
                 maxTokensPerStage={maxTokensPerStage}
-                walletMaticBalance={walletBalance.matic}
-                walletTokenBalance={walletBalance.token}
+                walletMaticBalance={maticBalance}
+                walletTokenBalance={tokenBalance}
               />
             </Flex>
           </Grid.Col>
