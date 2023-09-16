@@ -5,7 +5,7 @@ import { polygonMumbai } from 'wagmi/chains';
 import { useDebounce } from 'usehooks-ts';
 import { TokenPurchaseModalProps, ConnectionProgress } from '@/components/Modals/types';
 import ModalErrorState from '@/components/Modals/ModalProgressStates/ModalErrorState';
-import ModalConnectingState from '@/components/Modals/ModalProgressStates/ModalConnectingState';
+import ModalConnectingState from '@/components/Modals/ModalProgressStates/ModalConnectingState/ModalConnectingState';
 import ModalSuccessState from '@/components/Modals/ModalProgressStates/ModalSuccessState';
 import ModalPurchaseDetails from '@/components/Modals/ModalProgressStates/ModalPurchaseDetails';
 
