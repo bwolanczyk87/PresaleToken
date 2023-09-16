@@ -42,9 +42,15 @@ const ModalSuccessState: React.FC<ModalSuccessStateProps> = ({
     </Text>
     <Text align="center">You just purchased {tokenAmount} TSTK tokens.</Text>
 
-    {/* show link to etherscan contract call for confirmation  */}
+    {/* show link to contract call for confirmation  */}
     {Boolean(transactionHash) && (
-      <Anchor href={`https://mumbai.polygonscan.com/tx/${transactionHash}`} target="_blank">
+      <Anchor
+        href={`https://mumbai.polygonscan.com/tx/${transactionHash}`}
+        target="_blank"
+        style={{
+          cursor: 'pointer',
+        }}
+      >
         View on Polygonscan
       </Anchor>
     )}

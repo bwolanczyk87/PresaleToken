@@ -6,7 +6,7 @@ import { useDebounce } from 'usehooks-ts';
 import { TokenPurchaseModalProps, ConnectionProgress } from '@/components/Modals/types';
 import ModalErrorState from '@/components/Modals/ModalProgressStates/ModalErrorState/ModalErrorState';
 import ModalConnectingState from '@/components/Modals/ModalProgressStates/ModalConnectingState/ModalConnectingState';
-import ModalSuccessState from '@/components/Modals/ModalProgressStates/ModalSuccessState';
+import ModalSuccessState from '@/components/Modals/ModalProgressStates/ModalSuccessState/ModalSuccessState';
 import ModalPurchaseDetails from '@/components/Modals/ModalProgressStates/ModalPurchaseDetails/ModalPurchaseDetails';
 
 const ABI = require('@/contract/PresaleContractABI');
