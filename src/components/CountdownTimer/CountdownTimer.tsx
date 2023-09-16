@@ -2,35 +2,37 @@ import { Grid, Text } from '@mantine/core';
 import moment from 'moment';
 import { useState, useEffect } from 'react';
 /**
- * Countdown timer component.
- * Counts down to the end of the day since each presale stage takes 24 hours - need to update this to be more accurate
+ * Countdown timer component
+ * Counts down to the end of the current stage
+ * @prop currentStageStartTime - The unix timestamp when the current stage block started.
  * @returns React node
  */
 
-const CountdownTimer: React.FC = () => {
-  const [timeRemaining, setTimeRemaining] = useState<{
-    hours: number;
-    minutes: number;
-    seconds: number;
-  }>({
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
+const CountdownTimer: React.FC<{ currentStageStartTime: BigInt }> = ({ currentStageStartTime }) => {
+  // get the current time
+  // add 24 hours to the stage start time
+  // use the difference to show countdown
+  const [currentTime, setCurrentTime] = useState(moment.unix(Math.floor(Date.now() / 1000)));
+  const targetTime = moment.unix(+currentStageStartTime.toString()).add(36, 'hours');
+
+  const duration = moment.duration(targetTime.diff(currentTime));
+
+  // we don't want app to crash when currentStageStartTime is not yet set
+  let hours = 0;
+  let minutes = 0;
+  let seconds = 0;
+  if (currentStageStartTime) {
+    hours = duration.hours();
+    minutes = duration.minutes();
+    seconds = duration.seconds();
+  }
 
   useEffect(() => {
-    const timerInterval = setInterval(() => {
-      const now = moment();
-      const endOfDay = moment().endOf('day');
-      const duration = moment.duration(endOfDay.diff(now));
-      setTimeRemaining({
-        hours: duration.hours(),
-        minutes: duration.minutes(),
-        seconds: duration.seconds(),
-      });
+    const interval = setInterval(() => {
+      setCurrentTime(moment());
     }, 1000);
 
-    return () => clearInterval(timerInterval);
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -58,7 +60,7 @@ const CountdownTimer: React.FC = () => {
           }}
         >
           <Text fw="bold" size="3rem" color="white">
-            {timeRemaining.hours.toString().padStart(2, '0')}
+            {hours.toString().padStart(2, '0')}
           </Text>
           <Text fw="bold" size="sm" color="white">
             HOURS
@@ -78,7 +80,7 @@ const CountdownTimer: React.FC = () => {
           }}
         >
           <Text fw="bold" size="3rem" color="white">
-            {timeRemaining.minutes.toString().padStart(2, '0')}
+            {minutes.toString().padStart(2, '0')}
           </Text>
           <Text fw="bold" size="sm" color="white">
             MINUTES
@@ -98,7 +100,7 @@ const CountdownTimer: React.FC = () => {
           }}
         >
           <Text fw="bold" size="3rem" color="white">
-            {timeRemaining.seconds.toString().padStart(2, '0')}
+            {seconds.toString().padStart(2, '0')}
           </Text>
           <Text fw="bold" size="sm" color="white">
             SECONDS
