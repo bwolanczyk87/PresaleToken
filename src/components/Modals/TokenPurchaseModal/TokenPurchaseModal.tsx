@@ -9,6 +9,7 @@ import ModalConnectingState from '@/components/Modals/ModalProgressStates/ModalC
 import ModalSuccessState from '@/components/Modals/ModalProgressStates/ModalSuccessState/ModalSuccessState';
 import ModalPurchaseDetails from '@/components/Modals/ModalProgressStates/ModalPurchaseDetails/ModalPurchaseDetails';
 import useGetAccountBalances from '@/hooks/useGetAccountBalances';
+import useGetCurrentStageStats from '@/hooks/useGetCurrentStageStats';
 import { ABI } from '@/contract/PresaleContractABI';
 
 /**
@@ -38,6 +39,7 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
   const tokenDecimals = 18;
 
   const { refetchMaticBalance, refetchTokenBalance } = useGetAccountBalances();
+  const { refetchCurrentStageStats } = useGetCurrentStageStats();
 
   const { config } = usePrepareContractWrite({
     address: process.env.NEXT_PUBLIC_PRESALE_CONTRACT_ADDRESS as `0x${string}` | undefined,
@@ -80,6 +82,9 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
       // refetch account balances
       refetchMaticBalance();
       refetchTokenBalance();
+
+      // refetch stage stats
+      refetchCurrentStageStats();
     } else {
       setConnectionProgress(ConnectionProgress.NOT_STARTED);
     }
