@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from 'react';
 
 export enum ConnectionProgress {
+  NOT_STARTED = 'NOT_STARTED',
   PENDING = 'PENDING',
   CONNECTING = 'CONNECTING',
   REJECTED = 'REJECTED',
@@ -34,4 +35,11 @@ export interface ModalSuccessStateProps {
   transactionHash?: string;
   closeModal: () => void;
   tokenAmount: string;
+}
+
+export interface ModalPurchaseDetailsProps {
+  tokenAmount: string;
+  stageTokenPrice: number;
+  totalPriceOfPurchase: number;
+  walletMaticBalance: number;
 }

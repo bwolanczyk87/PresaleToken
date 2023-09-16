@@ -1,11 +1,13 @@
-import { Button, Text, Image, Modal, Flex, Box, Group, Title } from '@mantine/core';
+import { Button, Text, Modal } from '@mantine/core';
 import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from 'wagmi';
+import { useEffect } from 'react';
 import { polygonMumbai } from 'wagmi/chains';
 import { useDebounce } from 'usehooks-ts';
 import { TokenPurchaseModalProps, ConnectionProgress } from '@/components/Modals/types';
 import ModalErrorState from '@/components/Modals/ModalProgressStates/ModalErrorState';
 import ModalConnectingState from '@/components/Modals/ModalProgressStates/ModalConnectingState';
 import ModalSuccessState from '@/components/Modals/ModalProgressStates/ModalSuccessState';
+import ModalPurchaseDetails from '@/components/Modals/ModalProgressStates/ModalPurchaseDetails';
 
 const ABI = require('@/contract/PresaleContractABI');
 
@@ -33,30 +35,49 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
   stageTokenPrice,
 }) => {
   const debouncedTokenAmount = useDebounce(tokenAmount, 500);
+  const tokenDecimals = 18;
 
   const { config } = usePrepareContractWrite({
     address: process.env.NEXT_PUBLIC_PRESALE_CONTRACT_ADDRESS as `0x${string}` | undefined,
     abi: ABI,
     functionName: 'tokenSale',
-    args: [BigInt(+tokenAmount * 10 ** 18)],
+    args: [BigInt(+tokenAmount * 10 ** tokenDecimals)],
 
-    value: BigInt(stageTokenPrice * 10 ** 18 * +tokenAmount),
+    value: BigInt(stageTokenPrice * 10 ** tokenDecimals * +tokenAmount),
     enabled: Boolean(debouncedTokenAmount),
     chainId: polygonMumbai.id,
   });
 
-  const { data, write, reset } = useContractWrite(config);
-
+  const { data, write, reset, isError: writeError } = useContractWrite(config);
   const { isLoading, isSuccess, isError } = useWaitForTransaction({
     hash: data?.hash,
   });
 
   // reset modal state when modal is closed.
   const handleClose = () => {
-    setConnectionProgress(ConnectionProgress.PENDING);
+    setConnectionProgress(ConnectionProgress.NOT_STARTED);
     close();
     reset();
   };
+
+  // show wallet approval state and initiate write
+  const handleWriteContract = () => {
+    setConnectionProgress(ConnectionProgress.PENDING);
+    write?.();
+  };
+
+  // show different modal states based on status of transaction
+  useEffect(() => {
+    if (isLoading && !isError && !writeError) {
+      setConnectionProgress(ConnectionProgress.CONNECTING);
+    } else if (isError || writeError) {
+      setConnectionProgress(ConnectionProgress.ERROR);
+    } else if (isSuccess) {
+      setConnectionProgress(ConnectionProgress.SUCCESS);
+    } else {
+      setConnectionProgress(ConnectionProgress.NOT_STARTED);
+    }
+  }, [isLoading, isSuccess, isError, writeError]);
 
   return (
     <Modal
@@ -69,63 +90,13 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
       padding="xl"
     >
       {/* token and price details to show to the user  */}
-      <Title color="white" fw="bold" fz="xl" mb="xl">
-        Buy TSTK Tokens
-      </Title>
-      <Box
-        sx={{
-          borderRadius: '0.75rem',
-          padding: '20px',
-          width: '100%',
-          backgroundColor: '#25262B',
-        }}
-      >
-        <Text color="white" fw={500}>
-          You pay
-        </Text>
-        <Group position="apart">
-          <Text size="1.2rem" fw={600} color="white">
-            {totalPriceOfPurchase.toFixed(5)}
-          </Text>
-          <Flex gap="xs" align="center">
-            <Image maw={20} mx="auto" src="/polygon-matic-logo.svg" alt="matic icon" />{' '}
-            <Text fw="bold">MATIC</Text>
-          </Flex>
-        </Group>
-        <Group position="right" w="100%" mt=".5rem">
-          <Text size="sm">
-            Balance: <span>{walletMaticBalance.toFixed(5)}</span>
-          </Text>
-        </Group>
-      </Box>
-      <Box
-        sx={{
-          borderRadius: '0.75rem',
-          padding: '20px',
-          width: '100%',
-          backgroundColor: '#25262B',
-          marginTop: '.5rem',
-        }}
-      >
-        <Text color="white" fw={500}>
-          You receive
-        </Text>
-        <Group position="apart">
-          <Text size="1.2rem" fw={600} color="white">
-            {tokenAmount}
-          </Text>
-          <Flex gap="xs">
-            <Image maw={24} mx="auto" src="/tstk-token-symbol.png" alt="tstk icon" />{' '}
-            <Text fw="bold">TSTK</Text>
-          </Flex>
-        </Group>
-        <Group position="right" w="100%" mt=".5rem">
-          <Text size="sm">
-            1 TSTK = <span>{stageTokenPrice.toFixed(5)}</span> MATIC
-          </Text>
-        </Group>
-      </Box>
-      {connectionProgress === ConnectionProgress.PENDING && (
+      <ModalPurchaseDetails
+        tokenAmount={tokenAmount}
+        walletMaticBalance={walletMaticBalance}
+        stageTokenPrice={stageTokenPrice}
+        totalPriceOfPurchase={totalPriceOfPurchase}
+      />
+      {connectionProgress === ConnectionProgress.NOT_STARTED && (
         <Button
           radius="md"
           fullWidth
@@ -137,17 +108,14 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
             backgroundColor: '#CAFC36',
             color: '#000000',
           }}
-          onClick={() => {
-            setConnectionProgress(ConnectionProgress.CONNECTING);
-            write?.();
-          }}
+          onClick={handleWriteContract}
         >
           <Text fz="md">Continue</Text>
         </Button>
       )}
 
-      {/* connection request initiated. Awaiting user approval from extension  */}
-      {connectionProgress === ConnectionProgress.CONNECTING &&
+      {/* connection request initiated. awaiting user approval from extension  */}
+      {connectionProgress === ConnectionProgress.PENDING &&
         !isLoading &&
         !isSuccess &&
         !isError && (
@@ -155,7 +123,7 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
         )}
 
       {/* request approved by user. processing transaction  */}
-      {isLoading && (
+      {connectionProgress === ConnectionProgress.CONNECTING && (
         <ModalConnectingState
           titleText="Buying tokens"
           connectionRequestText="Purchasing your awesome tokens."
@@ -164,10 +132,10 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
       )}
 
       {/* transaction has an error  */}
-      {isError && <ModalErrorState />}
+      {connectionProgress === ConnectionProgress.ERROR && <ModalErrorState />}
 
       {/* token purchase was a success  */}
-      {isSuccess && !isLoading && (
+      {connectionProgress === ConnectionProgress.SUCCESS && (
         <ModalSuccessState
           closeModal={handleClose}
           tokenAmount={tokenAmount}
