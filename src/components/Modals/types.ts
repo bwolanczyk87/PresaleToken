@@ -9,16 +9,11 @@ export enum ConnectionProgress {
   SUCCESS = 'SUCCESS',
 }
 
-export interface WalletConnectModalProps {
+export interface TokenPurchaseModalProps {
   connectionProgress: ConnectionProgress;
   setConnectionProgress: Dispatch<SetStateAction<ConnectionProgress>>;
   opened: boolean;
   close: () => void;
-  retryRequest: () => void;
-  submitRequest: () => void;
-}
-
-export interface TokenPurchaseModalProps extends WalletConnectModalProps {
   tokenAmount: string;
   stageTokenPrice: number;
   totalPriceOfPurchase: number;

@@ -1,4 +1,4 @@
-import { Box, TextInput, Button, Text, Group } from '@mantine/core';
+import { Box, TextInput, Button, Text } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { useState } from 'react';
@@ -7,6 +7,7 @@ import WalletConnectButton from '@/components/WalletConnectButton/WalletConnectB
 import { TokenPurchaseModalProps } from '@/components/TokenPurchaseForm/types';
 import TokenPurchaseModal from '@/components/Modals/TokenPurchaseModal/TokenPurchaseModal';
 import { ConnectionProgress } from '@/components/Modals/types';
+import TokenPurchaseBalances from '@/components/TokenPurchaseBalances/TokenPurchaseBalances';
 
 /**
  * Form with input field and button to purchase TSTK tokens
@@ -67,16 +68,6 @@ const TokenPurchaseForm: React.FC<TokenPurchaseModalProps> = ({
     open();
   };
 
-  //TODO: Retry token purchase
-  const retryTokenPurchase = () => {
-    setConnectionProgress(ConnectionProgress.CONNECTING);
-  };
-
-  //TODO: Contract call to purchase token
-  const purchaseToken = () => {
-    console.log('We are now making contract call to purchase token');
-  };
-
   const totalPriceOfPurchase = +form.values.tokenAmount * stageTokenPrice;
   const insufficientBalance = totalPriceOfPurchase > walletMaticBalance;
 
@@ -130,41 +121,14 @@ const TokenPurchaseForm: React.FC<TokenPurchaseModalProps> = ({
           )}
         </form>
       </Box>
-      <Box
-        sx={{
-          borderRadius: '0.75rem',
-          backgroundColor: '#304221',
-          padding: '20px',
-          width: '100%',
-        }}
-      >
-        <Group position="apart">
-          <Text size="1rem" fw={500} color="white">
-            Amount to pay
-          </Text>
-          <Text size="1rem" fw={600} color={insufficientBalance ? 'red' : 'white'}>
-            {totalPriceOfPurchase.toFixed(5)} MATIC
-          </Text>
-        </Group>
 
-        <Group position="apart">
-          <Text size="1rem" fw={500} color="white">
-            Wallet Balance
-          </Text>
-          <Text size="1rem" fw={600} color="white">
-            {walletMaticBalance.toFixed(5)} MATIC
-          </Text>
-        </Group>
-
-        <Group position="apart" mt="md">
-          <Text size="1.2rem" fw={500} color="white">
-            You own
-          </Text>
-          <Text size="1.2rem" fw={600} color="white">
-            {walletTokenBalance.toFixed(5)} TSTK
-          </Text>
-        </Group>
-      </Box>
+      {/* show balances depending on the amount of token  */}
+      <TokenPurchaseBalances
+        walletMaticBalance={walletMaticBalance}
+        walletTokenBalance={walletTokenBalance}
+        totalPriceOfPurchase={totalPriceOfPurchase}
+        insufficientBalance={insufficientBalance}
+      />
 
       {/* token purchase modal  */}
       <TokenPurchaseModal
@@ -176,8 +140,6 @@ const TokenPurchaseForm: React.FC<TokenPurchaseModalProps> = ({
         walletMaticBalance={walletMaticBalance}
         stageTokenPrice={stageTokenPrice ?? 0}
         totalPriceOfPurchase={totalPriceOfPurchase}
-        retryRequest={retryTokenPurchase}
-        submitRequest={purchaseToken}
       />
     </>
   );
