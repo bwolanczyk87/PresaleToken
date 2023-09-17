@@ -14,7 +14,7 @@ const TstkBanner: React.FC = () => (
         fontSize: '3.5rem',
       }}
     >
-      Buy{' '}
+      <span>Buy </span>
       <span
         style={{
           color: 'rgb(147 51 234)',
@@ -22,7 +22,7 @@ const TstkBanner: React.FC = () => (
       >
         TSTK
       </span>{' '}
-      Now, to Get Rich In The Future
+      <span>Now, to Get Rich In The Future</span>
     </Title>
     <Text mt="lg" mb="xl">
       TSTK is not just a DeFi token, it is the best DeFi token that you can invest in right now!
