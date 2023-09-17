@@ -1,6 +1,7 @@
 import { Grid, Text } from '@mantine/core';
 import moment from 'moment';
 import { useState, useEffect } from 'react';
+import useGetCurrentStageStats from '@/hooks/useGetCurrentStageStats';
 /**
  * Countdown timer component
  * Counts down to the end of the current stage
@@ -10,10 +11,14 @@ import { useState, useEffect } from 'react';
 
 const CountdownTimer: React.FC<{ currentStageStartTime: BigInt }> = ({ currentStageStartTime }) => {
   // get the current time
-  // add 24 hours to the stage start time
+  // add 24 hours (duration per stage) to the stage start time
   // use the difference to show countdown
   const [currentTime, setCurrentTime] = useState(moment.unix(Math.floor(Date.now() / 1000)));
-  const targetTime = moment.unix(+currentStageStartTime.toString()).add(36, 'hours');
+
+  // it is difficult to determine exactly how long the stage takes
+  // this is because the time between blocks is not always 2 seconds
+  // using an estimate of 26 hours here.
+  const targetTime = moment.unix(+currentStageStartTime.toString()).add(26, 'hours');
 
   const duration = moment.duration(targetTime.diff(currentTime));
 
@@ -22,9 +27,15 @@ const CountdownTimer: React.FC<{ currentStageStartTime: BigInt }> = ({ currentSt
   let minutes = 0;
   let seconds = 0;
   if (currentStageStartTime) {
-    hours = duration.hours();
-    minutes = duration.minutes();
-    seconds = duration.seconds();
+    hours = Math.abs(duration.hours());
+    minutes = Math.abs(duration.minutes());
+    seconds = Math.abs(duration.seconds());
+  }
+
+  // refetch new stage end time when the current one ends
+  const { refetchCurrentStageStats } = useGetCurrentStageStats();
+  if (duration.as('milliseconds') === 0) {
+    refetchCurrentStageStats();
   }
 
   useEffect(() => {
