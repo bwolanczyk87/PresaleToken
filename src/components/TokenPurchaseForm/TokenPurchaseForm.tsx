@@ -62,9 +62,8 @@ const TokenPurchaseForm: React.FC<TokenPurchaseModalProps> = ({
     },
   });
 
-  // submit form data to purchase token
+  // // open modal to confirm amounts
   const handlePurchaseSubmit = () => {
-    // open modal to confirm amounts
     open();
   };
 
