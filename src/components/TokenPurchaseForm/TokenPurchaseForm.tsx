@@ -29,7 +29,7 @@ const TokenPurchaseForm: React.FC<TokenPurchaseModalProps> = ({
   const [connectionProgress, setConnectionProgress] = useState<ConnectionProgress>(
     ConnectionProgress.PENDING
   );
-  const { isDisconnected } = useAccount();
+  const { isDisconnected, isConnected } = useAccount();
 
   const form = useForm({
     initialValues: {
@@ -122,12 +122,14 @@ const TokenPurchaseForm: React.FC<TokenPurchaseModalProps> = ({
       </Box>
 
       {/* show balances depending on the amount of token  */}
-      <TokenPurchaseBalances
-        walletMaticBalance={walletMaticBalance}
-        walletTokenBalance={walletTokenBalance}
-        totalPriceOfPurchase={totalPriceOfPurchase}
-        insufficientBalance={insufficientBalance}
-      />
+      {isConnected && (
+        <TokenPurchaseBalances
+          walletMaticBalance={walletMaticBalance}
+          walletTokenBalance={walletTokenBalance}
+          totalPriceOfPurchase={totalPriceOfPurchase}
+          insufficientBalance={insufficientBalance}
+        />
+      )}
 
       {/* token purchase modal  */}
       <TokenPurchaseModal
