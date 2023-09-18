@@ -17,8 +17,7 @@ const CountdownTimer: React.FC<{ currentStageStartTime: BigInt }> = ({ currentSt
 
   // it is difficult to determine exactly how long the stage takes
   // this is because the time between blocks is not always 2 seconds
-  // using an estimate of 26 hours here.
-  const targetTime = moment.unix(+currentStageStartTime.toString()).add(26, 'hours');
+  const targetTime = moment.unix(+currentStageStartTime.toString()).add(24, 'hours');
 
   const duration = moment.duration(targetTime.diff(currentTime));
 

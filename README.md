@@ -5,7 +5,14 @@ This is a dApp for the presale of TSTK tokens. The pre-sale runs in 24-hour stag
 The application is hosted here:
 [Vercel Link](https://tstk-beincrypto.vercel.app/)
 
+## Key Decisions and assumptions
 
+1. Users can buy a maximum of 10,000 tokens per stage. This limit is enforced from this app to avoid unnecessary calls to the contract.
+2. Since the app is working on a testnet (Polygon Mumbai), the assumption is that gas fees are negligible, and users don't need to worry about high transaction costs.
+3. The app does not require user authentication, and users can interact with it using their wallets directly.
+5. The stage countdown component assumes that each stage will take exactly 24 hours. However, the time between blocks on Polygon Mumbai fluctuates and is not always 2 seconds which means it can sometimes take less or more than 24 hours per stage.
+6. Since the presale smart contract has an unlimited number of stages, it is assumed that the stage progressions are managed internally within the smart contract. 
+7. The ERC-20 token contract is already deployed on Polygon testnet. It is assumed that this contract is correctly deployed and functioning properly. A similar assumption is made for the Presale contract.
 
 ## Getting Started
 
@@ -85,5 +92,4 @@ yarn start
 - [Wagmi](https://wagmi.sh/) - For smart contract calls.
 - [TypeScript](https://www.typescriptlang.org/) - Used for static typing
 - [Mantine ](https://mantine.dev/) - UI components library.
-
 
