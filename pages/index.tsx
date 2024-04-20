@@ -3,9 +3,10 @@ import HeaderContainer from '@/components/HeaderContainer/HeaderContainer';
 import CountdownTimer from '@/components/CountdownTimer/CountdownTimer';
 import CurrentStageStats from '@/components/CurrentStageStats/CurrentStageStats';
 import TokenPurchaseForm from '@/components/TokenPurchaseForm/TokenPurchaseForm';
-import TstkBanner from '@/components/TstkBanner/TstkBanner';
+import VmBanner from '@/components/VmBanner/VmBanner';
 import useGetCurrentStageStats from '@/hooks/useGetCurrentStageStats';
 import useGetAccountBalances from '@/hooks/useGetAccountBalances';
+import { useState, useEffect } from 'react'
 
 export default function HomePage() {
   const {
@@ -15,7 +16,13 @@ export default function HomePage() {
     stageTokenSupply,
     maxTokensPerStage,
   } = useGetCurrentStageStats();
+  
   const { maticBalance, tokenBalance } = useGetAccountBalances();
+  const [isClient, setIsClient] = useState(false)
+ 
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   return (
     <AppShell
@@ -33,7 +40,7 @@ export default function HomePage() {
       <Container size="lg" pt="xl">
         <Grid gutter={5} gutterXs="md" gutterMd="xl" gutterXl={120}>
           <Grid.Col xs={12} sm={6}>
-            <TstkBanner />
+            <VmBanner />
           </Grid.Col>
 
           <Grid.Col xs={12} sm={6}>

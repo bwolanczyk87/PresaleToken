@@ -28,7 +28,7 @@ const CurrentStageStats: React.FC<CurrentStageValues> = ({
       }}
     >
       <Text size="1rem" fw={500} color="white">
-        Presale Supply: <span>{stageTokenSupply.toLocaleString()} TSTK</span>
+        Presale Supply: <span>{stageTokenSupply.toLocaleString()} WM</span>
       </Text>
     </div>
 
@@ -39,7 +39,7 @@ const CurrentStageStats: React.FC<CurrentStageValues> = ({
     >
       <Text size="1rem" fw={500} color="white">
         Maximum purchase amount:{' '}
-        <span>{maxTokensPerStage && maxTokensPerStage.toLocaleString()} TSTK</span>
+        <span>{maxTokensPerStage && maxTokensPerStage.toLocaleString()} WM</span>
       </Text>
     </div>
     <div

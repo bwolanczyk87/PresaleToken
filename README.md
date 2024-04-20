@@ -1,6 +1,6 @@
-# TSTK Presale
+# WM Presale
 
-This is a dApp for the presale of TSTK tokens. The pre-sale runs in 24-hour stages and this app lets you purchase tokens as per the price of the current stage. The app runs on the Polygon Mumbai chain
+This is a dApp for the presale of WM tokens. The pre-sale runs in 24-hour stages and this app lets you purchase tokens as per the price of the current stage. The app runs on the Polygon Mumbai chain
 
 The application is hosted here:
 [Vercel Link](https://tstk-beincrypto.vercel.app/)
@@ -45,8 +45,8 @@ yarn
 4. Create a `.env` file and add the following values. You'll need an Alchemy API key as well as your walletConnect project key. 
 ```
 NEXT_PUBLIC_ALCHEMY_ID=
-NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=
-NEXT_PUBLIC_TSTK_TOKEN_ADDRESS=
+WALLET_ID=
+TOKEN_ADDRESS=
 NEXT_PUBLIC_PRESALE_CONTRACT_ADDRESS=
 ```
 

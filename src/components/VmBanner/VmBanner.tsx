@@ -1,10 +1,10 @@
 import { Flex, Title, Text } from '@mantine/core';
 
 /**
- * component to show a small welcome text for the TSTK token
+ * component to show a small welcome text for the WM token
  * @returns React node
  */
-const TstkBanner: React.FC = () => (
+const VmBanner: React.FC = () => (
   <Flex h="100%" gap="md" justify="center" align="center" direction="column" wrap="wrap" p="xl">
     <Title
       order={1}
@@ -20,14 +20,14 @@ const TstkBanner: React.FC = () => (
           color: 'rgb(147 51 234)',
         }}
       >
-        TSTK
+        WM
       </span>{' '}
       <span>Now, to Get Rich In The Future</span>
     </Title>
     <Text mt="lg" mb="xl">
-      TSTK is not just a DeFi token, it is the best DeFi token that you can invest in right now!
+      WM is not just a DeFi token, it is the best DeFi token that you can invest in right now!
     </Text>
   </Flex>
 );
 
-export default TstkBanner;
+export default VmBanner;

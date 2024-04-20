@@ -1,4 +1,11 @@
 {
+  "browser": {
+    "fs": false,
+    "path": false,
+    "os": false,
+    "net": false,
+    "tls": false
+  },
   "name": "mantine-next-template",
   "version": "1.0.0",
   "private": true,
@@ -44,7 +51,8 @@
     "react-dom": "18.2.0",
     "usehooks-ts": "^2.9.1",
     "viem": "^1.10.9",
-    "wagmi": "^1.4.1"
+    "wagmi": "^1.4.1",
+    "yarn": "^1.22.22"
   },
   "devDependencies": {
     "@babel/core": "^7.17.8",

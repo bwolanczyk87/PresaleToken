@@ -2,7 +2,7 @@ import { useBalance, useAccount } from 'wagmi';
 import { useState, useEffect } from 'react';
 
 /**
- * Hook to get matic and TSTK balance of the connected account.
+ * Hook to get matic and WM balance of the connected account.
  * Also returns methods to refetch these values.
  * @returns
  */
@@ -28,10 +28,10 @@ const useGetAccountBalances = (): {
     address,
   });
 
-  // get account TSTK balance
+  // get account balance
   const { data: tokenData, refetch: refetchTokenBalance } = useBalance({
     address,
-    token: process.env.NEXT_PUBLIC_TSTK_TOKEN_ADDRESS as `0x${string}` | undefined,
+    token: process.env.TOKEN_ADDRESS as `0x${string}` | undefined,
   });
 
   // account balances

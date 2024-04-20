@@ -10,7 +10,7 @@ import { ConnectionProgress } from '@/components/Modals/types';
 import TokenPurchaseBalances from '@/components/TokenPurchaseBalances/TokenPurchaseBalances';
 
 /**
- * Form with input field and button to purchase TSTK tokens
+ * Form with input field and button to purchase WM tokens
  * @prop stageTokenPrice,
  * @prop stageTokenSupply,
  * @prop maxTokensPerStage,
@@ -115,7 +115,7 @@ const TokenPurchaseForm: React.FC<TokenPurchaseModalProps> = ({
               fullWidth
               type="submit"
             >
-              <Text fz="md">buy TSTK Tokens</Text>
+              <Text fz="md">buy WM Tokens</Text>
             </Button>
           )}
         </form>
