@@ -1,8 +1,5 @@
 import { Container, Group, Image } from '@mantine/core';
 import WalletConnectButton from '@/components/WalletConnectButton/WalletConnectButton';
-import dynamic from 'next/dynamic'
- 
-const NoSSR = dynamic(() => import('@/components/HeaderContainer/HeaderContainer'), { ssr: false })
 
 /**
  * Header section component.
@@ -19,7 +16,6 @@ const HeaderContainer: React.FC = () => (
         <WalletConnectButton />
       </Group>
     </Container>
-    <NoSSR />
   </div>
 );
 

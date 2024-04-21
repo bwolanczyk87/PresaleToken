@@ -55,13 +55,12 @@ const CountdownTimer: React.FC<{ currentStageStartTime: BigInt }> = ({ currentSt
       gutterXs="md"
       gutterMd="xl"
       gutterXl={20}
-      grow
       style={{
         width: '100%',
       }}
       p={0}
     >
-      <Grid.Col span={4}>
+      <Grid.Col span={3}>
         <div
           style={{
             borderRadius: '0.5rem',
@@ -73,7 +72,7 @@ const CountdownTimer: React.FC<{ currentStageStartTime: BigInt }> = ({ currentSt
             flexDirection: 'column',
           }}
         >
-          <Text fw="bold" size="3rem" color="white">
+          <Text fw="bold" size="3rem" color="white" suppressHydrationWarning>
             {days.toString().padStart(2, '0')}
           </Text>
           <Text fw="bold" size="sm" color="white">
@@ -81,7 +80,7 @@ const CountdownTimer: React.FC<{ currentStageStartTime: BigInt }> = ({ currentSt
           </Text>
         </div>
       </Grid.Col>
-      <Grid.Col span={4}>
+      <Grid.Col span={3}>
         <div
           style={{
             borderRadius: '0.5rem',
@@ -93,7 +92,7 @@ const CountdownTimer: React.FC<{ currentStageStartTime: BigInt }> = ({ currentSt
             flexDirection: 'column',
           }}
         >
-          <Text fw="bold" size="3rem" color="white">
+          <Text fw="bold" size="3rem" color="white" suppressHydrationWarning>
             {hours.toString().padStart(2, '0')}
           </Text>
           <Text fw="bold" size="sm" color="white">
@@ -101,7 +100,7 @@ const CountdownTimer: React.FC<{ currentStageStartTime: BigInt }> = ({ currentSt
           </Text>
         </div>
       </Grid.Col>
-      <Grid.Col span={4}>
+      <Grid.Col span={3}>
         <div
           style={{
             borderRadius: '0.5rem',
@@ -113,7 +112,7 @@ const CountdownTimer: React.FC<{ currentStageStartTime: BigInt }> = ({ currentSt
             flexDirection: 'column',
           }}
         >
-          <Text fw="bold" size="3rem" color="white">
+          <Text fw="bold" size="3rem" color="white" suppressHydrationWarning>
             {minutes.toString().padStart(2, '0')}
           </Text>
           <Text fw="bold" size="sm" color="white">
@@ -121,7 +120,7 @@ const CountdownTimer: React.FC<{ currentStageStartTime: BigInt }> = ({ currentSt
           </Text>
         </div>
       </Grid.Col>
-      <Grid.Col span={4}>
+      <Grid.Col span={3}>
         <div
           style={{
             borderRadius: '0.5rem',
@@ -133,7 +132,7 @@ const CountdownTimer: React.FC<{ currentStageStartTime: BigInt }> = ({ currentSt
             flexDirection: 'column',
           }}
         >
-          <Text fw="bold" size="3rem" color="white">
+          <Text fw="bold" size="3rem" color="white" suppressHydrationWarning>
             {seconds.toString().padStart(2, '0')}
           </Text>
           <Text fw="bold" size="sm" color="white">
