@@ -41,14 +41,14 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
   const { refetchFlrBalance, refetchTokenBalance } = useGetAccountBalances();
   const { refetchCurrentStageStats } = useGetCurrentStageStats();
 
-  console.log("here " + "0xD2630d9E95bbee0d2b49bD1e5abcd0DFD50cfc3A")
+  console.log("here " + "0xC15167Cef1a6584A5d91A95E2070C800A157A2f2")
   console.log("abi" + ABI)
 
   const { config } = usePrepareContractWrite({
-    address: "0xD2630d9E95bbee0d2b49bD1e5abcd0DFD50cfc3A" as `0x${string}` | undefined,
+    address: "0xC15167Cef1a6584A5d91A95E2070C800A157A2f2" as `0x${string}` | undefined,
     abi: ABI,
     functionName: 'tokenSale',
-    args: [BigInt(+tokenAmount * 10 ** tokenDecimals)],
+    args: [BigInt(+tokenAmount /** 10 ** tokenDecimals*/)],
 
     value: BigInt(stageTokenPrice * 10 ** tokenDecimals * +tokenAmount),
     enabled: Boolean(debouncedTokenAmount),

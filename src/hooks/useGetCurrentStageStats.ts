@@ -41,7 +41,7 @@ const useGetCurrentStageStats = (): {
 
   // contract calls to get stage details
   const preSaleContract = {
-    address: "0xD2630d9E95bbee0d2b49bD1e5abcd0DFD50cfc3A" as `0x${string}` | undefined,
+    address: "0xC15167Cef1a6584A5d91A95E2070C800A157A2f2" as `0x${string}` | undefined,
     abi: ABI as any,
   };
 
@@ -90,10 +90,10 @@ const useGetCurrentStageStats = (): {
       return {
         ...prevState,
         stageTokenPrice: parseFloat(price.result.toString()) / 10 ** 18,
-        stageTokenSupply: parseFloat(supply.result.toString()) / 10 ** 18,
+        stageTokenSupply: parseFloat(supply.result.toString()), // / 10 ** 18,
         currentStage: stage.result,
         currentStageBlockStart: block.result,
-        maxTokensPerStage: parseFloat(maxPerWallet.result.toString()) / 10 ** 18,
+        maxTokensPerStage: parseFloat(maxPerWallet.result.toString()), // / 10 ** 18,
       };
     });
   }, [loadingStageStats, errorLoadingStageStats, preSaleStageStats]);

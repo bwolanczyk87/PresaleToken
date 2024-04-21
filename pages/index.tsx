@@ -7,8 +7,17 @@ import VmBanner from '@/components/VmBanner/VmBanner';
 import useGetCurrentStageStats from '@/hooks/useGetCurrentStageStats';
 import useGetAccountBalances from '@/hooks/useGetAccountBalances';
 import { useState, useEffect } from 'react'
+import dynamic from 'next/dynamic'
+ 
+const NoSSR = dynamic(() => import('../pages/index'), { ssr: false })
 
 export default function HomePage() {
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
   const {
     currentStage,
     currentStageStartTime,
@@ -18,11 +27,9 @@ export default function HomePage() {
   } = useGetCurrentStageStats();
 
   const { maticBalance, tokenBalance } = useGetAccountBalances();
-  const [isClient, setIsClient] = useState(false)
+
  
-  useEffect(() => {
-    setIsClient(true)
-  }, [])
+
 
   return (
     <AppShell

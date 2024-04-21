@@ -44,7 +44,7 @@ const TokenPurchaseForm: React.FC<TokenPurchaseModalProps> = ({
 
         // cannot buy above current stage max amount
         if (maxTokensPerStage && +value > maxTokensPerStage) {
-          return 'Amount exceeds maximum tokens per stage.';
+          return `Amount exceeds maximum tokens per stage: ${maxTokensPerStage},, ${value}.`;
         }
 
         // cannot buy above current stage token supply

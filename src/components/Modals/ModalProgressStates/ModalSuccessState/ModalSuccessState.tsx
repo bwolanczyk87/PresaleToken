@@ -45,13 +45,13 @@ const ModalSuccessState: React.FC<ModalSuccessStateProps> = ({
     {/* show link to contract call for confirmation  */}
     {Boolean(transactionHash) && (
       <Anchor
-        href={`https://mumbai.polygonscan.com/tx/${transactionHash}`}
+        href={`https://mainnet.flarescan.com/tx/${transactionHash}`}
         target="_blank"
         style={{
           cursor: 'pointer',
         }}
       >
-        View on Polygonscan
+        View on Flarescan
       </Anchor>
     )}
 

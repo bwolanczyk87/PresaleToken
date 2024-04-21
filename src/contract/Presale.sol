@@ -20,7 +20,7 @@ contract TokenPresale {
 
     mapping(uint8 => uint256) public stageAvailableAmount;
     mapping(uint8 => uint256) public stageMaxAmount;
-    mapping(uint128 => uint128) public stagePrices;
+    mapping(uint8 => uint256) public stagePrices;
     mapping(address => uint256) public soldAmountPerWallet;
 
 
@@ -36,7 +36,7 @@ contract TokenPresale {
         STAGE_MAX_WALLET_BUY = totalSupply;
 
         stageAvailableAmount[currentStage] = totalSupply;
-        stageMaxAmount[currentStage] = totalSupply;
+        stageAvailableAmount[currentStage] = totalSupply;
     }
 
     modifier onlyOwner() {
@@ -90,7 +90,7 @@ contract TokenPresale {
         require(soldAmountPerWallet[msg.sender] + qty <= STAGE_MAX_WALLET_BUY, "Purchase limit exceeded");
 
         soldAmountPerWallet[msg.sender] += qty;
-        stageMaxAmount[currentStage] -= qty;
+        stageAvailableAmount[currentStage] -= qty;
         
         emit Sale(msg.sender, currentStage, qty, msg.value);
         return true;
@@ -102,7 +102,7 @@ contract TokenPresale {
 
     // View functions for contract state querying
     function currentStagePrice() public view returns (uint256) {
-        return uint256(stagePrices[currentStage]);
+        return stagePrices[currentStage];
     }
 
     function currentStageAvailableAmount() public view returns (uint256) {
@@ -115,5 +115,9 @@ contract TokenPresale {
 
     function currentStageSoldAmount(address to) public view returns (uint256) {
         return soldAmountPerWallet[to];
+    }
+
+    function setCurrentStagePrice(uint256 value) public onlyOwner() {
+        stagePrices[currentStage] = value;
     }
 }
