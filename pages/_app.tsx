@@ -4,7 +4,6 @@ import Head from 'next/head';
 import { MantineProvider, ColorScheme } from '@mantine/core';
 import { WagmiConfig, createConfig} from 'wagmi';
 import { flare } from 'wagmi/chains';
-import { Chain } from 'wagmi';
 import { ConnectKitProvider, getDefaultConfig } from 'connectkit';
 
 // google font
