@@ -17,7 +17,7 @@ export interface TokenPurchaseModalProps {
   tokenAmount: string;
   stageTokenPrice: number;
   totalPriceOfPurchase: number;
-  walletMaticBalance: number;
+  walletFlrBalance: number;
 }
 
 export interface ModalConnectingStateProps {
@@ -36,5 +36,5 @@ export interface ModalPurchaseDetailsProps {
   tokenAmount: string;
   stageTokenPrice: number;
   totalPriceOfPurchase: number;
-  walletMaticBalance: number;
+  walletFlrBalance: number;
 }

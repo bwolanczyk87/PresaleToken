@@ -49,7 +49,7 @@ const CurrentStageStats: React.FC<CurrentStageValues> = ({
       }}
     >
       <Text size="1rem" fw={500} color="white">
-        Presale Price: <span>{stageTokenPrice} MATIC</span>
+        Presale Price: <span>{stageTokenPrice} FLR</span>
       </Text>
     </div>
   </Flex>

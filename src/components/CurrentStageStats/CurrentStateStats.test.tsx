@@ -21,13 +21,13 @@ describe('CurrentStageStats Component', () => {
     render(<CurrentStageStats {...sampleProps} />);
     const maxAmountText = screen.getByText('Maximum purchase amount:');
     expect(maxAmountText).toBeInTheDocument();
-    expect(maxAmountText).toHaveTextContent('10,000 WM');
+    expect(maxAmountText).toHaveTextContent('100,000,000,000 WM');
   });
 
   it('renders the stage token price', () => {
     render(<CurrentStageStats {...sampleProps} />);
     const priceText = screen.getByText('Presale Price:');
     expect(priceText).toBeInTheDocument();
-    expect(priceText).toHaveTextContent('0.00064 MATIC');
+    expect(priceText).toHaveTextContent('0.00064 FLR');
   });
 });

@@ -16,7 +16,7 @@ export default function HomePage() {
     stageTokenSupply,
     maxTokensPerStage,
   } = useGetCurrentStageStats();
-  
+
   const { maticBalance, tokenBalance } = useGetAccountBalances();
   const [isClient, setIsClient] = useState(false)
  
@@ -76,7 +76,7 @@ export default function HomePage() {
                 stageTokenPrice={stageTokenPrice}
                 stageTokenSupply={stageTokenSupply}
                 maxTokensPerStage={maxTokensPerStage}
-                walletMaticBalance={maticBalance}
+                walletFlrBalance={maticBalance}
                 walletTokenBalance={tokenBalance}
               />
             </Flex>

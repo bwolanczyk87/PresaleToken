@@ -9,7 +9,7 @@ import { useState, useEffect } from 'react';
 const useGetAccountBalances = (): {
   maticBalance: number;
   tokenBalance: number;
-  refetchMaticBalance: () => void;
+  refetchFlrBalance: () => void;
   refetchTokenBalance: () => void;
 } => {
   const [walletBalance, setWalletBalance] = useState<{
@@ -23,8 +23,8 @@ const useGetAccountBalances = (): {
   // get connected account
   const { address } = useAccount();
 
-  // get account MATIC balance
-  const { data: maticData, refetch: refetchMaticBalance } = useBalance({
+  // get account FLR balance
+  const { data: maticData, refetch: refetchFlrBalance } = useBalance({
     address,
   });
 
@@ -44,7 +44,7 @@ const useGetAccountBalances = (): {
     }));
   }, [maticData?.formatted, tokenData?.formatted]);
 
-  return { ...walletBalance, refetchMaticBalance, refetchTokenBalance };
+  return { ...walletBalance, refetchFlrBalance, refetchTokenBalance };
 };
 
 export default useGetAccountBalances;

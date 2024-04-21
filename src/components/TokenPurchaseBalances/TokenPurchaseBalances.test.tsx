@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import TokenPurchaseBalances from '@/components/TokenPurchaseBalances/TokenPurchaseBalances';
 
 const balanceProps = {
-  walletMaticBalance: 4.5,
+  walletFlrBalance: 4.5,
   walletTokenBalance: 600,
   totalPriceOfPurchase: 2.5,
   insufficientBalance: false,
@@ -13,15 +13,15 @@ describe('TokenPurchaseBalances', () => {
     render(<TokenPurchaseBalances {...balanceProps} />);
 
     expect(
-      screen.getByText(`${balanceProps.totalPriceOfPurchase.toFixed(5)} MATIC`)
+      screen.getByText(`${balanceProps.totalPriceOfPurchase.toFixed(5)} FLR`)
     ).toBeInTheDocument();
   });
 
-  it('should render the wallet Matic balance', () => {
+  it('should render the wallet Flr balance', () => {
     render(<TokenPurchaseBalances {...balanceProps} />);
 
     expect(
-      screen.getByText(`${balanceProps.walletMaticBalance.toFixed(5)} MATIC`)
+      screen.getByText(`${balanceProps.walletFlrBalance.toFixed(5)} FLR`)
     ).toBeInTheDocument();
   });
 
@@ -38,7 +38,7 @@ describe('TokenPurchaseBalances', () => {
 
     render(<TokenPurchaseBalances {...{ ...balanceProps, insufficientBalance }} />);
 
-    expect(screen.getByText(`${balanceProps.totalPriceOfPurchase.toFixed(5)} MATIC`)).toHaveStyle(
+    expect(screen.getByText(`${balanceProps.totalPriceOfPurchase.toFixed(5)} FLR`)).toHaveStyle(
       'color: rgb(250, 82, 82)'
     );
   });

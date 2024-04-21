@@ -14,7 +14,7 @@ import TokenPurchaseBalances from '@/components/TokenPurchaseBalances/TokenPurch
  * @prop stageTokenPrice,
  * @prop stageTokenSupply,
  * @prop maxTokensPerStage,
- * @prop walletMaticBalance,
+ * @prop walletFlrBalance,
  * @prop walletTokenBalance,
  * @returns
  */
@@ -22,7 +22,7 @@ const TokenPurchaseForm: React.FC<TokenPurchaseModalProps> = ({
   stageTokenPrice,
   stageTokenSupply,
   maxTokensPerStage,
-  walletMaticBalance,
+  walletFlrBalance,
   walletTokenBalance,
 }) => {
   const [opened, { open, close }] = useDisclosure(false);
@@ -53,7 +53,7 @@ const TokenPurchaseForm: React.FC<TokenPurchaseModalProps> = ({
         }
 
         // cannot buy with insufficient wallet balance
-        if (+value * stageTokenPrice > walletMaticBalance) {
+        if (+value * stageTokenPrice > walletFlrBalance) {
           return 'Insufficent funds.';
         }
 
@@ -68,7 +68,7 @@ const TokenPurchaseForm: React.FC<TokenPurchaseModalProps> = ({
   };
 
   const totalPriceOfPurchase = +form.values.tokenAmount * stageTokenPrice;
-  const insufficientBalance = totalPriceOfPurchase > walletMaticBalance;
+  const insufficientBalance = totalPriceOfPurchase > walletFlrBalance;
 
   return (
     <>
@@ -124,7 +124,7 @@ const TokenPurchaseForm: React.FC<TokenPurchaseModalProps> = ({
       {/* show balances depending on the amount of token  */}
       {isConnected && (
         <TokenPurchaseBalances
-          walletMaticBalance={walletMaticBalance}
+          walletFlrBalance={walletFlrBalance}
           walletTokenBalance={walletTokenBalance}
           totalPriceOfPurchase={totalPriceOfPurchase}
           insufficientBalance={insufficientBalance}
@@ -138,7 +138,7 @@ const TokenPurchaseForm: React.FC<TokenPurchaseModalProps> = ({
         connectionProgress={connectionProgress}
         setConnectionProgress={setConnectionProgress}
         tokenAmount={form.values.tokenAmount}
-        walletMaticBalance={walletMaticBalance}
+        walletFlrBalance={walletFlrBalance}
         stageTokenPrice={stageTokenPrice ?? 0}
         totalPriceOfPurchase={totalPriceOfPurchase}
       />

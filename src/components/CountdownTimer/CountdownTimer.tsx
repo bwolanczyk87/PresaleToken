@@ -15,17 +15,21 @@ const CountdownTimer: React.FC<{ currentStageStartTime: BigInt }> = ({ currentSt
   // use the difference to show countdown
   const [currentTime, setCurrentTime] = useState(moment.unix(Math.floor(Date.now() / 1000)));
 
+  const preSaleStartDate = new Date(Date.UTC(2024, 3, 24, 18, 0, 0));
+  currentStageStartTime = BigInt(Math.floor(preSaleStartDate.getTime() / 1000));
+  //currentStageStartTime = BigInt(22805933);
   // it is difficult to determine exactly how long the stage takes
   // this is because the time between blocks is not always 2 seconds
-  const targetTime = moment.unix(+currentStageStartTime.toString()).add(24, 'hours');
-
+  const targetTime = moment.unix(+currentStageStartTime.toString()); //.add(24, 'hours');
   const duration = moment.duration(targetTime.diff(currentTime));
 
   // we don't want app to crash when currentStageStartTime is not yet set
+  let days = 0;
   let hours = 0;
   let minutes = 0;
   let seconds = 0;
   if (currentStageStartTime) {
+    days = Math.abs(duration.days());
     hours = Math.abs(duration.hours());
     minutes = Math.abs(duration.minutes());
     seconds = Math.abs(duration.seconds());
@@ -57,6 +61,26 @@ const CountdownTimer: React.FC<{ currentStageStartTime: BigInt }> = ({ currentSt
       }}
       p={0}
     >
+      <Grid.Col span={4}>
+        <div
+          style={{
+            borderRadius: '0.5rem',
+            backgroundColor: '#485A16',
+            padding: '20px',
+            justifyContent: 'center',
+            alignItems: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <Text fw="bold" size="3rem" color="white">
+            {days.toString().padStart(2, '0')}
+          </Text>
+          <Text fw="bold" size="sm" color="white">
+            DAYS
+          </Text>
+        </div>
+      </Grid.Col>
       <Grid.Col span={4}>
         <div
           style={{

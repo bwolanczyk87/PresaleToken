@@ -47,7 +47,7 @@ yarn
 NEXT_PUBLIC_ALCHEMY_ID=
 WALLET_ID=
 TOKEN_ADDRESS=
-NEXT_PUBLIC_PRESALE_CONTRACT_ADDRESS=
+PRESALE_CONTRACT_ADDRESS=
 ```
 
 To obtain an Alchemy key head over to [the Alchemy website](https://alchemy.com/).

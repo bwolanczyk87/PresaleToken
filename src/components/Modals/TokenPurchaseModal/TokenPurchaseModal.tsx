@@ -1,7 +1,7 @@
 import { Button, Text, Modal } from '@mantine/core';
 import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from 'wagmi';
 import { useEffect } from 'react';
-import { polygonMumbai } from 'wagmi/chains';
+import { flare } from 'wagmi/chains';
 import { useDebounce } from 'usehooks-ts';
 import { TokenPurchaseModalProps, ConnectionProgress } from '@/components/Modals/types';
 import ModalErrorState from '@/components/Modals/ModalProgressStates/ModalErrorState/ModalErrorState';
@@ -20,7 +20,7 @@ import { ABI } from '@/contract/PresaleContractABI';
  * @prop setConnectionProgress - change the progress state of the transaction
  * @prop totalPriceOfPurchase - total price to purchase given amount of tokens
  * @prop tokenAmount - amount of tokens to purchase
- * @prop walletMaticBalance - Matic balance of the current account
+ * @prop walletFlrBalance - Flr balance of the current account
  * @prop stageTokenPrice - price of one token for the current stage.
  * @returns
  */
@@ -32,26 +32,30 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
   setConnectionProgress,
   totalPriceOfPurchase,
   tokenAmount,
-  walletMaticBalance,
+  walletFlrBalance,
   stageTokenPrice,
 }) => {
   const debouncedTokenAmount = useDebounce(tokenAmount, 500);
   const tokenDecimals = 18;
 
-  const { refetchMaticBalance, refetchTokenBalance } = useGetAccountBalances();
+  const { refetchFlrBalance, refetchTokenBalance } = useGetAccountBalances();
   const { refetchCurrentStageStats } = useGetCurrentStageStats();
 
+  console.log("here " + "0xD2630d9E95bbee0d2b49bD1e5abcd0DFD50cfc3A")
+  console.log("abi" + ABI)
+
   const { config } = usePrepareContractWrite({
-    address: process.env.NEXT_PUBLIC_PRESALE_CONTRACT_ADDRESS as `0x${string}` | undefined,
+    address: "0xD2630d9E95bbee0d2b49bD1e5abcd0DFD50cfc3A" as `0x${string}` | undefined,
     abi: ABI,
     functionName: 'tokenSale',
     args: [BigInt(+tokenAmount * 10 ** tokenDecimals)],
 
     value: BigInt(stageTokenPrice * 10 ** tokenDecimals * +tokenAmount),
     enabled: Boolean(debouncedTokenAmount),
-    chainId: polygonMumbai.id,
+    chainId: flare.id,
   });
 
+    console.log(config);
   const { data, write, reset, isError: writeError } = useContractWrite(config);
   const { isLoading, isSuccess, isError } = useWaitForTransaction({
     hash: data?.hash,
@@ -80,7 +84,7 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
       setConnectionProgress(ConnectionProgress.SUCCESS);
 
       // refetch account balances
-      refetchMaticBalance();
+      refetchFlrBalance();
       refetchTokenBalance();
 
       // refetch stage stats
@@ -103,7 +107,7 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
       {/* token and price details to show to the user  */}
       <ModalPurchaseDetails
         tokenAmount={tokenAmount}
-        walletMaticBalance={walletMaticBalance}
+        walletFlrBalance={walletFlrBalance}
         stageTokenPrice={stageTokenPrice}
         totalPriceOfPurchase={totalPriceOfPurchase}
       />
@@ -114,7 +118,7 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
           size="lg"
           mt="md"
           uppercase
-          disabled={!write}
+          disabled={false}//{!write}
           style={{
             backgroundColor: '#CAFC36',
             color: '#000000',

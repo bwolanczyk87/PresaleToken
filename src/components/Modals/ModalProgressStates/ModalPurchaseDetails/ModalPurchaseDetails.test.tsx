@@ -5,7 +5,7 @@ import ModalPurchaseDetails from '@/components/Modals/ModalProgressStates/ModalP
 const detailsProp = {
   totalPriceOfPurchase: 100,
   tokenAmount: '13',
-  walletMaticBalance: 2.5,
+  walletFlrBalance: 2.5,
   stageTokenPrice: 0.00067,
 };
 
@@ -23,10 +23,10 @@ describe('ModalPurchaseDetails', () => {
     expect(screen.getByText(detailsProp.totalPriceOfPurchase.toFixed(5))).toBeInTheDocument();
   });
 
-  it('should render the wallet Matic balance', () => {
+  it('should render the wallet Flr balance', () => {
     render(<ModalPurchaseDetails {...detailsProp} />);
 
-    expect(screen.getByText(detailsProp.walletMaticBalance.toFixed(5))).toBeInTheDocument();
+    expect(screen.getByText(detailsProp.walletFlrBalance.toFixed(5))).toBeInTheDocument();
   });
 
   it('should render the token amount to be purchased', () => {
@@ -41,7 +41,7 @@ describe('ModalPurchaseDetails', () => {
     expect(screen.getByText(detailsProp.stageTokenPrice.toFixed(5))).toBeInTheDocument();
   });
 
-  it('should render the Matic icon', () => {
+  it('should render the Flr icon', () => {
     render(<ModalPurchaseDetails {...detailsProp} />);
 
     expect(screen.getByAltText('matic icon')).toBeInTheDocument();
