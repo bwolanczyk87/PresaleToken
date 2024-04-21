@@ -41,9 +41,6 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
   const { refetchFlrBalance, refetchTokenBalance } = useGetAccountBalances();
   const { refetchCurrentStageStats } = useGetCurrentStageStats();
 
-  console.log("here " + "0xC15167Cef1a6584A5d91A95E2070C800A157A2f2")
-  console.log("abi" + ABI)
-
   const { config } = usePrepareContractWrite({
     address: "0xC15167Cef1a6584A5d91A95E2070C800A157A2f2" as `0x${string}` | undefined,
     abi: ABI,
@@ -55,7 +52,6 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
     chainId: flare.id,
   });
 
-    console.log(config);
   const { data, write, reset, isError: writeError } = useContractWrite(config);
   const { isLoading, isSuccess, isError } = useWaitForTransaction({
     hash: data?.hash,

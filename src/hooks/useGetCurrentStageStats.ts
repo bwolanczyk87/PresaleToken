@@ -86,7 +86,6 @@ const useGetCurrentStageStats = (): {
         result: number;
         status: string;
       }[];
-      console.log(block.result)
       return {
         ...prevState,
         stageTokenPrice: parseFloat(price.result.toString()) / 10 ** 18,
