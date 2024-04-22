@@ -6,17 +6,25 @@ import TokenPurchaseForm from '@/components/TokenPurchaseForm/TokenPurchaseForm'
 import VmBanner from '@/components/VmBanner/VmBanner';
 import useGetCurrentStageStats from '@/hooks/useGetCurrentStageStats';
 import useGetAccountBalances from '@/hooks/useGetAccountBalances';
+import { useEffect, useState } from 'react';
 
 export default function HomePage() {
   const {
-    currentStage,
-    currentStageStartTime,
-    stageTokenPrice,
-    stageTokenSupply,
-    maxTokensPerStage,
+    stage,
+    stagePrice,
+    stageSupply,
+    stageStartTime,
+    stageEndTime,
+    stageMinWalletBuy,
+    stageMaxWalletBuy
   } = useGetCurrentStageStats();
 
-  const { maticBalance, tokenBalance } = useGetAccountBalances();
+  const { walletBalance, tokenBalance } = useGetAccountBalances();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+      setIsClient(true);
+  }, []);
 
   return (
     <AppShell
@@ -53,24 +61,26 @@ export default function HomePage() {
             >
               {/* Countdown timer  */}
               <Text mb="sm" align="left" size="1.3rem" w="100%" color="white" fw="bold">
-                Presale Stage #{currentStage.toString()} Ends In:
+                Presale Stage #{stage.toString()} Ends In:
               </Text>
-              <CountdownTimer currentStageStartTime={currentStageStartTime} />
+              <CountdownTimer stageStartTime={stageStartTime} />
 
               {/* stats about current stage  */}
               <CurrentStageStats
-                currentStage={currentStage}
-                stageTokenPrice={stageTokenPrice}
-                stageTokenSupply={stageTokenSupply}
-                maxTokensPerStage={maxTokensPerStage}
+                stage={stage}
+                stagePrice={stagePrice}
+                stageSupply={stageSupply}
+                stageMinWalletBuy={stageMinWalletBuy}
+                stageMaxWalletBuy={stageMaxWalletBuy}
               />
 
               {/* form with input and submit button along with transaction modal */}
               <TokenPurchaseForm
-                stageTokenPrice={stageTokenPrice}
-                stageTokenSupply={stageTokenSupply}
-                maxTokensPerStage={maxTokensPerStage}
-                walletFlrBalance={maticBalance}
+                stagePrice={stagePrice}
+                stageSupply={stageSupply}
+                stageMinWalletBuy={stageMinWalletBuy}
+                stageMaxWalletBuy={stageMaxWalletBuy}
+                walletBalance={walletBalance}
                 walletTokenBalance={tokenBalance}
               />
             </Flex>

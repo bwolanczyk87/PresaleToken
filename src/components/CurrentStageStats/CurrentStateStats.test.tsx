@@ -4,9 +4,10 @@ import CurrentStageStats from './CurrentStageStats';
 
 // sample props
 const sampleProps = {
-  stageTokenPrice: 0.00064,
-  stageTokenSupply: 1000000000000,
-  maxTokensPerStage: 500000000000,
+  stagePrice: 0.00064,
+  stageSupply: 1000000000000,
+  stageMinWalletBuy: 500000000,
+  stageMaxWalletBuy: 500000000000,
 };
 
 describe('CurrentStageStats Component', () => {
@@ -14,7 +15,7 @@ describe('CurrentStageStats Component', () => {
     render(<CurrentStageStats {...sampleProps} />);
     const supplyText = screen.getByText('Presale Supply:');
     expect(supplyText).toBeInTheDocument();
-    expect(supplyText).toHaveTextContent('1,000,000,000,000 WM');
+    expect(supplyText).toHaveTextContent('1,000,000,000 WM');
   });
 
   it('renders the maximum purchase amount', () => {

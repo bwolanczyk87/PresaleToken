@@ -3,17 +3,17 @@ import { ModalPurchaseDetailsProps } from '@/components/Modals/types';
 
 /**
  * Modal section to show details of how many WM tokens to buy and the total cost
- * @prop totalPriceOfPurchase - the total price of token purchase
- * @prop walletFlrBalance - Flr balance for the connected account
- * @prop tokenAmount - amount of tokens to purchase
- * @prop stageTokenPrice - token price for the current stage
+ * @prop saleTokenAmount - the total price of token purchase
+ * @prop walletBalance - Flr balance for the connected account
+ * @prop saleTokenQuantity - amount of tokens to purchase
+ * @prop stagePrice - token price for the current stage
  * @returns
  */
 const ModalPurchaseDetails: React.FC<ModalPurchaseDetailsProps> = ({
-  tokenAmount,
-  totalPriceOfPurchase,
-  stageTokenPrice,
-  walletFlrBalance,
+  saleTokenQuantity,
+  saleTokenAmount,
+  stagePrice,
+  walletBalance,
 }) => (
   <>
     {/* token and price details to show to the user  */}
@@ -33,7 +33,7 @@ const ModalPurchaseDetails: React.FC<ModalPurchaseDetailsProps> = ({
       </Text>
       <Group position="apart">
         <Text size="1.2rem" fw={600} color="white">
-          {totalPriceOfPurchase.toFixed(5)}
+          {saleTokenAmount.toFixed(5)}
         </Text>
         <Flex gap="xs" align="center">
           <Image maw={20} mx="auto" src="/polygon-matic-logo.svg" alt="matic icon" />{' '}
@@ -42,7 +42,7 @@ const ModalPurchaseDetails: React.FC<ModalPurchaseDetailsProps> = ({
       </Group>
       <Group position="right" w="100%" mt=".5rem">
         <Text size="sm">
-          Balance: <span>{walletFlrBalance.toFixed(5)}</span>
+          Balance: <span>{walletBalance.toFixed(5)}</span>
         </Text>
       </Group>
     </Box>
@@ -60,7 +60,7 @@ const ModalPurchaseDetails: React.FC<ModalPurchaseDetailsProps> = ({
       </Text>
       <Group position="apart">
         <Text size="1.2rem" fw={600} color="white">
-          {tokenAmount}
+          {saleTokenQuantity}
         </Text>
         <Flex gap="xs">
           <Image maw={24} mx="auto" src="/tstk-token-symbol.png" alt="tstk icon" />{' '}
@@ -69,7 +69,7 @@ const ModalPurchaseDetails: React.FC<ModalPurchaseDetailsProps> = ({
       </Group>
       <Group position="right" w="100%" mt=".5rem">
         <Text size="sm">
-          1 WM = <span>{stageTokenPrice.toFixed(5)}</span> FLR
+          1 WM = <span>{stagePrice.toFixed(5)}</span> FLR
         </Text>
       </Group>
     </Box>

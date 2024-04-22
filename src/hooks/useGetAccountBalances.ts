@@ -7,16 +7,16 @@ import { useState, useEffect } from 'react';
  * @returns
  */
 const useGetAccountBalances = (): {
-  maticBalance: number;
+  walletBalance: number;
   tokenBalance: number;
   refetchFlrBalance: () => void;
   refetchTokenBalance: () => void;
 } => {
   const [walletBalance, setWalletBalance] = useState<{
-    maticBalance: number;
+    walletBalance: number;
     tokenBalance: number;
   }>({
-    maticBalance: 0,
+    walletBalance: 0,
     tokenBalance: 0,
   });
 
@@ -24,7 +24,7 @@ const useGetAccountBalances = (): {
   const { address } = useAccount();
 
   // get account FLR balance
-  const { data: maticData, refetch: refetchFlrBalance } = useBalance({
+  const { data: walletData, refetch: refetchFlrBalance } = useBalance({
     address,
   });
 
@@ -36,13 +36,13 @@ const useGetAccountBalances = (): {
 
   // account balances
   useEffect(() => {
-    if (!maticData?.formatted || !tokenData?.formatted) return;
+    if (!walletData?.formatted || !tokenData?.formatted) return;
     setWalletBalance((prevState) => ({
       ...prevState,
-      maticBalance: +maticData.formatted,
+      walletBalance: +walletData.formatted,
       tokenBalance: +tokenData.formatted,
     }));
-  }, [maticData?.formatted, tokenData?.formatted]);
+  }, [walletData?.formatted, tokenData?.formatted]);
 
   return { ...walletBalance, refetchFlrBalance, refetchTokenBalance };
 };

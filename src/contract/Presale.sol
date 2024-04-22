@@ -9,13 +9,13 @@ contract TokenPresale {
     address public owner;
     address public saleToken;
     bool public paused;
-    uint8 public currentStage;
+    uint8 public stage;
     uint128 public blockStart;
     uint128 public currentStageBlockStart;
     uint128 public UNIT_PRICE;
     uint64 public STAGE_BLOCKS_DURATION;
     uint256 public STAGE_MAX_TOKENS;
-    uint256 public STAGE_MAX_WALLET_BUY;
+    uint256 public currentStageMaxPerWallet;
     uint64 public STAGE_PRICE_INCREMENT;
 
     mapping(uint8 => uint256) public stageAvailableAmount;
@@ -27,16 +27,16 @@ contract TokenPresale {
     constructor(address _saleToken) {
         owner = msg.sender;
         saleToken = _saleToken;
-        currentStage = 1;
+        stage = 1;
 
         IERC20 token = IERC20(_saleToken);
         uint256 totalSupply = token.totalSupply();
 
         STAGE_MAX_TOKENS = totalSupply;
-        STAGE_MAX_WALLET_BUY = totalSupply;
+        currentStageMaxPerWallet = totalSupply;
 
-        stageAvailableAmount[currentStage] = totalSupply;
-        stageAvailableAmount[currentStage] = totalSupply;
+        stageAvailableAmount[stage] = totalSupply;
+        stageAvailableAmount[stage] = totalSupply;
     }
 
     modifier onlyOwner() {
@@ -87,12 +87,12 @@ contract TokenPresale {
 
     function tokenSale(uint256 qty) public payable whenNotPaused returns (bool) {
         require(msg.value >= qty * UNIT_PRICE, "Insufficient payment");
-        require(soldAmountPerWallet[msg.sender] + qty <= STAGE_MAX_WALLET_BUY, "Purchase limit exceeded");
+        require(soldAmountPerWallet[msg.sender] + qty <= currentStageMaxPerWallet, "Purchase limit exceeded");
 
         soldAmountPerWallet[msg.sender] += qty;
-        stageAvailableAmount[currentStage] -= qty;
+        stageAvailableAmount[stage] -= qty;
         
-        emit Sale(msg.sender, currentStage, qty, msg.value);
+        emit Sale(msg.sender, stage, qty, msg.value);
         return true;
     }
 
@@ -102,15 +102,15 @@ contract TokenPresale {
 
     // View functions for contract state querying
     function currentStagePrice() public view returns (uint256) {
-        return stagePrices[currentStage];
+        return stagePrices[stage];
     }
 
     function currentStageAvailableAmount() public view returns (uint256) {
-        return stageAvailableAmount[currentStage];
+        return stageAvailableAmount[stage];
     }
 
     function currentStageMaxAmount() public view returns (uint256) {
-        return stageMaxAmount[currentStage];
+        return stageMaxAmount[stage];
     }
 
     function currentStageSoldAmount(address to) public view returns (uint256) {
@@ -118,6 +118,6 @@ contract TokenPresale {
     }
 
     function setCurrentStagePrice(uint256 value) public onlyOwner() {
-        stagePrices[currentStage] = value;
+        stagePrices[stage] = value;
     }
 }

@@ -17,7 +17,7 @@ const config = createConfig(
   getDefaultConfig({
     appName: 'Worms Pre-Sale App',
     chains: [flare],
-    walletConnectProjectId: process.env.WALLET_ID!,
+    walletConnectProjectId: process.env.PRESALE_RECEIVER_WALLET_ADDRESS!,
   })
 );
 
@@ -27,7 +27,7 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
   return (
     <>
       <Head>
-        <title>WM Pre-sale</title>
+        <title>WORM Pre-sale</title>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
         <link rel="shortcut icon" href="/favicon.ico" />
       </Head>

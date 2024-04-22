@@ -2,15 +2,16 @@ import { Flex, Text } from '@mantine/core';
 import { CurrentStageValues } from '@/components/CurrentStageStats/types';
 
 /**
- * @prop stageTokenPrice - current stage token price
- * @prop stageTokenSupply - available tokens for the current stage
- * @prop maxTokensPerStage - maximum tokens a wallet can purchase per stage
+ * @prop stagePrice - current stage token price
+ * @prop stageSupply - available tokens for the current stage
+ * @prop stageMaxWalletBuy - maximum tokens a wallet can purchase per stage
  * @returns
  */
 const CurrentStageStats: React.FC<CurrentStageValues> = ({
-  stageTokenPrice,
-  stageTokenSupply,
-  maxTokensPerStage,
+  stagePrice,
+  stageSupply,
+  stageMinWalletBuy,
+  stageMaxWalletBuy,
 }) => (
   <Flex
     mih={50}
@@ -27,8 +28,8 @@ const CurrentStageStats: React.FC<CurrentStageValues> = ({
         marginTop: '1rem',
       }}
     >
-      <Text size="1rem" fw={500} color="white">
-        Presale Supply: <span>{stageTokenSupply.toLocaleString()} WM</span>
+      <Text size="1rem" fw={500} color="white" suppressHydrationWarning>
+        Presale Supply: <span>{stageSupply.toLocaleString()} WM</span>
       </Text>
     </div>
 
@@ -37,9 +38,13 @@ const CurrentStageStats: React.FC<CurrentStageValues> = ({
         width: '100%',
       }}
     >
-      <Text size="1rem" fw={500} color="white">
+      <Text size="1rem" fw={500} color="white" suppressHydrationWarning>
+        Minimum purchase amount:{' '}
+        <span>{stageMinWalletBuy && stageMinWalletBuy.toLocaleString()} WM</span>
+      </Text>
+      <Text size="1rem" fw={500} color="white" suppressHydrationWarning>
         Maximum purchase amount:{' '}
-        <span>{maxTokensPerStage && maxTokensPerStage.toLocaleString()} WM</span>
+        <span>{stageMaxWalletBuy && stageMaxWalletBuy.toLocaleString()} WM</span>
       </Text>
     </div>
     <div
@@ -48,8 +53,8 @@ const CurrentStageStats: React.FC<CurrentStageValues> = ({
         marginTop: '.2rem',
       }}
     >
-      <Text size="1rem" fw={500} color="white">
-        Presale Price: <span>{stageTokenPrice} FLR</span>
+      <Text size="1rem" fw={500} color="white" suppressHydrationWarning>
+        Presale Price: <span>{stagePrice} FLR</span>
       </Text>
     </div>
   </Flex>

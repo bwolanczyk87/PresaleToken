@@ -3,8 +3,9 @@ import { TokenFormBalancesProps } from '@/components/TokenPurchaseForm/types';
 
 const TokenPurchaseBalances: React.FC<TokenFormBalancesProps> = ({
   insufficientBalance,
-  totalPriceOfPurchase,
-  walletFlrBalance,
+  stagePrice,
+  saleTokenAmount,
+  walletBalance,
   walletTokenBalance,
 }) => (
   <Box
@@ -13,32 +14,32 @@ const TokenPurchaseBalances: React.FC<TokenFormBalancesProps> = ({
       backgroundColor: '#304221',
       padding: '20px',
       width: '100%',
-    }}
+    }} 
   >
     <Group position="apart">
       <Text size="1rem" fw={500} color={insufficientBalance ? 'red' : 'white'}>
-        Amount to pay
+        Worms You want to buy
       </Text>
       <Text size="1rem" fw={600} color={insufficientBalance ? 'red' : 'white'}>
-        {totalPriceOfPurchase.toFixed(5)} FLR
+        {Number(saleTokenAmount / stagePrice).toLocaleString()} WM
       </Text>
     </Group>
 
     <Group position="apart">
       <Text size="1rem" fw={500} color="white">
-        Wallet Balance
+      Worms You own under bed
       </Text>
       <Text size="1rem" fw={600} color="white">
-        {walletFlrBalance.toFixed(5)} FLR
+      {walletTokenBalance.toFixed(5).toLocaleString()} WM
       </Text>
     </Group>
 
     <Group position="apart" mt="md">
       <Text size="1.2rem" fw={500} color="white">
-        You own
+        Your wallet balance
       </Text>
       <Text size="1.2rem" fw={600} color="white">
-        {walletTokenBalance.toFixed(5)} WM
+        {walletBalance.toFixed(5).toLocaleString()} FLR
       </Text>
     </Group>
   </Box>

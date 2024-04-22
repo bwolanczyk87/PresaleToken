@@ -11,18 +11,19 @@ import TokenPurchaseBalances from '@/components/TokenPurchaseBalances/TokenPurch
 
 /**
  * Form with input field and button to purchase WM tokens
- * @prop stageTokenPrice,
- * @prop stageTokenSupply,
- * @prop maxTokensPerStage,
- * @prop walletFlrBalance,
+ * @prop stagePrice,
+ * @prop stageSupply,
+ * @prop stageMaxWalletBuy,
+ * @prop walletBalance,
  * @prop walletTokenBalance,
  * @returns
  */
 const TokenPurchaseForm: React.FC<TokenPurchaseModalProps> = ({
-  stageTokenPrice,
-  stageTokenSupply,
-  maxTokensPerStage,
-  walletFlrBalance,
+  stagePrice,
+  stageSupply,
+  stageMinWalletBuy,
+  stageMaxWalletBuy,
+  walletBalance,
   walletTokenBalance,
 }) => {
   const [opened, { open, close }] = useDisclosure(false);
@@ -33,28 +34,33 @@ const TokenPurchaseForm: React.FC<TokenPurchaseModalProps> = ({
 
   const form = useForm({
     initialValues: {
-      tokenAmount: '',
+      saleTokenQuantity: '',
     },
 
     validate: {
-      tokenAmount: (value) => {
+      saleTokenQuantity: (value) => {
         if (!value) {
           return 'Token amount required';
         }
 
         // cannot buy above current stage max amount
-        if (maxTokensPerStage && +value > maxTokensPerStage) {
-          return `Amount exceeds maximum tokens per stage: ${maxTokensPerStage},, ${value}.`;
+        if (stageMinWalletBuy && +value < stageMinWalletBuy) {
+          return `Amount don't reach minimum tokens to buy: ${stageMinWalletBuy}.`;
+        }
+
+        // cannot buy above current stage max amount
+        if (stageMaxWalletBuy && +value > stageMaxWalletBuy) {
+          return `Amount exceeds maximum tokens to buy: ${stageMaxWalletBuy}.`;
         }
 
         // cannot buy above current stage token supply
-        if (+value > stageTokenSupply) {
+        if (+value > stageSupply) {
           return 'Amount exceeds current token supply.';
         }
 
         // cannot buy with insufficient wallet balance
-        if (+value * stageTokenPrice > walletFlrBalance) {
-          return 'Insufficent funds.';
+        if (+value * stagePrice > walletBalance) {
+          return 'Insufficient funds.';
         }
 
         return null;
@@ -67,22 +73,22 @@ const TokenPurchaseForm: React.FC<TokenPurchaseModalProps> = ({
     open();
   };
 
-  const totalPriceOfPurchase = +form.values.tokenAmount * stageTokenPrice;
-  const insufficientBalance = totalPriceOfPurchase > walletFlrBalance;
+  const saleTokenAmount = +form.values.saleTokenQuantity; // * stagePrice;
+  const insufficientBalance = saleTokenAmount > walletBalance;
 
   return (
     <>
       <Box w="100%" mx="auto">
         <form onSubmit={form.onSubmit(handlePurchaseSubmit)}>
           <TextInput
-            placeholder="Enter token amount"
+            placeholder="How much FLR worms can eat?"
             radius="md"
             size="lg"
             my="1rem"
             w="100%"
             min={1}
             step="0.00001"
-            {...form.getInputProps('tokenAmount')}
+            {...form.getInputProps('saleTokenQuantity')}
             type="number"
             styles={{
               input: {
@@ -124,9 +130,10 @@ const TokenPurchaseForm: React.FC<TokenPurchaseModalProps> = ({
       {/* show balances depending on the amount of token  */}
       {isConnected && (
         <TokenPurchaseBalances
-          walletFlrBalance={walletFlrBalance}
+          walletBalance={walletBalance}
           walletTokenBalance={walletTokenBalance}
-          totalPriceOfPurchase={totalPriceOfPurchase}
+          stagePrice={stagePrice}
+          saleTokenAmount={saleTokenAmount}
           insufficientBalance={insufficientBalance}
         />
       )}
@@ -137,10 +144,10 @@ const TokenPurchaseForm: React.FC<TokenPurchaseModalProps> = ({
         close={close}
         connectionProgress={connectionProgress}
         setConnectionProgress={setConnectionProgress}
-        tokenAmount={form.values.tokenAmount}
-        walletFlrBalance={walletFlrBalance}
-        stageTokenPrice={stageTokenPrice ?? 0}
-        totalPriceOfPurchase={totalPriceOfPurchase}
+        saleTokenQuantity={form.values.saleTokenQuantity}
+        walletBalance={walletBalance}
+        stagePrice={stagePrice ?? 0}
+        saleTokenAmount={saleTokenAmount}
       />
     </>
   );

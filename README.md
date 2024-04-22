@@ -45,7 +45,7 @@ yarn
 4. Create a `.env` file and add the following values. You'll need an Alchemy API key as well as your walletConnect project key. 
 ```
 NEXT_PUBLIC_ALCHEMY_ID=
-WALLET_ID=
+PRESALE_RECEIVER_WALLET_ADDRESS=
 TOKEN_ADDRESS=
 PRESALE_CONTRACT_ADDRESS=
 ```

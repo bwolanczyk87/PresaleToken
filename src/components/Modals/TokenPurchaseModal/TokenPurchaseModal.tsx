@@ -1,6 +1,6 @@
 import { Button, Text, Modal } from '@mantine/core';
 import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from 'wagmi';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { flare } from 'wagmi/chains';
 import { useDebounce } from 'usehooks-ts';
 import { TokenPurchaseModalProps, ConnectionProgress } from '@/components/Modals/types';
@@ -10,7 +10,8 @@ import ModalSuccessState from '@/components/Modals/ModalProgressStates/ModalSucc
 import ModalPurchaseDetails from '@/components/Modals/ModalProgressStates/ModalPurchaseDetails/ModalPurchaseDetails';
 import useGetAccountBalances from '@/hooks/useGetAccountBalances';
 import useGetCurrentStageStats from '@/hooks/useGetCurrentStageStats';
-import { ABI } from '@/contract/PresaleContractABI';
+import { PresaleContractAbi, TokenContractAbi } from '@/contract/AppBinaryInterfaces';
+import { useContractReads } from 'wagmi';
 
 /**
  * Modal to show progress of the token purchase
@@ -18,10 +19,10 @@ import { ABI } from '@/contract/PresaleContractABI';
  * @prop close - function to close modal
  * @prop connectionProgress - progress of transaction request
  * @prop setConnectionProgress - change the progress state of the transaction
- * @prop totalPriceOfPurchase - total price to purchase given amount of tokens
- * @prop tokenAmount - amount of tokens to purchase
- * @prop walletFlrBalance - Flr balance of the current account
- * @prop stageTokenPrice - price of one token for the current stage.
+ * @prop saleTokenAmount - total price to purchase given amount of tokens
+ * @prop saleTokenQuantity - amount of tokens to purchase
+ * @prop walletBalance - Flr balance of the current account
+ * @prop stagePrice - price of one token for the current stage.
  * @returns
  */
 
@@ -30,25 +31,45 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
   close,
   connectionProgress,
   setConnectionProgress,
-  totalPriceOfPurchase,
-  tokenAmount,
-  walletFlrBalance,
-  stageTokenPrice,
+  saleTokenAmount,
+  saleTokenQuantity,
+  walletBalance,
+  stagePrice,
 }) => {
-  const debouncedTokenAmount = useDebounce(tokenAmount, 500);
-  const tokenDecimals = 18;
+  const tokenContract = {
+    address: process.env.TOKEN_ADDRESS as `0x${string}` | undefined,
+    abi: TokenContractAbi as any
+  };
 
-  const { refetchFlrBalance, refetchTokenBalance } = useGetAccountBalances();
-  const { refetchCurrentStageStats } = useGetCurrentStageStats();
+  const presaleContract = {
+    address: process.env.PRESALE_CONTRACT_ADDRESS as `0x${string}` | undefined,
+    abi: PresaleContractAbi as any
+  };
+
+  // const {
+  //   data: tokenData,
+  //   isError: errorLoadingStageStats,
+  //   isLoading: loadingStageStats
+  // } = useContractReads({
+  //   contracts: [
+  //     {
+  //       ...tokenContract,
+  //       functionName: 'decimal'
+  //     }
+  //   ]
+  // });
+
+  const decimal = 6;
+  const buyTokenQuantity = stagePrice == 0 ? 0 : +saleTokenQuantity / (stagePrice/decimal);
+  const buyTokenQuantityRounded = buyTokenQuantity < 0 ? 0 : Math.round(buyTokenQuantity); 
+  const saleTokenAmountRounded = saleTokenAmount < 0 ? 0 : Math.round(saleTokenAmount);
 
   const { config } = usePrepareContractWrite({
-    address: "0xC15167Cef1a6584A5d91A95E2070C800A157A2f2" as `0x${string}` | undefined,
-    abi: ABI,
-    functionName: 'tokenSale',
-    args: [BigInt(+tokenAmount /** 10 ** tokenDecimals*/)],
-
-    value: BigInt(stageTokenPrice * 10 ** tokenDecimals * +tokenAmount),
-    enabled: Boolean(debouncedTokenAmount),
+    ...presaleContract,
+    functionName: 'saleToken',
+    args: [ BigInt(buyTokenQuantityRounded) ],
+    value: BigInt(saleTokenAmountRounded),
+    enabled: Boolean(useDebounce(saleTokenQuantity, 500)),
     chainId: flare.id,
   });
 
@@ -70,6 +91,8 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
     write?.();
   };
 
+  const { refetchFlrBalance, refetchTokenBalance } = useGetAccountBalances();
+  const { refetchCurrentStageStats } = useGetCurrentStageStats();
   // show different modal states based on status of transaction
   useEffect(() => {
     if (isLoading && !isError && !writeError) {
@@ -102,10 +125,10 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
     >
       {/* token and price details to show to the user  */}
       <ModalPurchaseDetails
-        tokenAmount={tokenAmount}
-        walletFlrBalance={walletFlrBalance}
-        stageTokenPrice={stageTokenPrice}
-        totalPriceOfPurchase={totalPriceOfPurchase}
+        saleTokenQuantity={saleTokenQuantity}
+        walletBalance={walletBalance}
+        stagePrice={stagePrice}
+        saleTokenAmount={saleTokenAmount}
       />
       {connectionProgress === ConnectionProgress.NOT_STARTED && (
         <Button
@@ -149,7 +172,7 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
       {connectionProgress === ConnectionProgress.SUCCESS && (
         <ModalSuccessState
           closeModal={handleClose}
-          tokenAmount={tokenAmount}
+          saleTokenQuantity={saleTokenQuantity}
           transactionHash={data?.hash}
         />
       )}

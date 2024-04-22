@@ -1,6 +1,7 @@
 export interface CurrentStageValues {
-  stageTokenPrice: number;
-  stageTokenSupply: number;
-  currentStage?: number;
-  maxTokensPerStage?: number;
+  stage?: number;
+  stagePrice: number;
+  stageSupply: number;
+  stageMinWalletBuy?: number, 
+  stageMaxWalletBuy?: number;
 }

@@ -5,30 +5,30 @@ import useGetCurrentStageStats from '@/hooks/useGetCurrentStageStats';
 /**
  * Countdown timer component
  * Counts down to the end of the current stage
- * @prop currentStageStartTime - The unix timestamp when the current stage block started.
+ * @prop stageStartTime - The unix timestamp when the current stage block started.
  * @returns React node
  */
 
-const CountdownTimer: React.FC<{ currentStageStartTime: BigInt }> = ({ currentStageStartTime }) => {
+const CountdownTimer: React.FC<{ stageStartTime: number }> = ({ stageStartTime }) => {
   // get the current time
   // add 24 hours (duration per stage) to the stage start time
   // use the difference to show countdown
   const [currentTime, setCurrentTime] = useState(moment.unix(Math.floor(Date.now() / 1000)));
 
-  const preSaleStartDate = new Date(Date.UTC(2024, 3, 24, 18, 0, 0));
-  currentStageStartTime = BigInt(Math.floor(preSaleStartDate.getTime() / 1000));
-  //currentStageStartTime = BigInt(22805933);
+  // const preSaleStartDate = new Date(Date.UTC(2024, 3, 24, 18, 0, 0));
+  // stageStartTime = BigInt(Math.floor(preSaleStartDate.getTime() / 1000));
+  //stageStartTime = BigInt(22805933);
   // it is difficult to determine exactly how long the stage takes
   // this is because the time between blocks is not always 2 seconds
-  const targetTime = moment.unix(+currentStageStartTime.toString()); //.add(24, 'hours');
+  const targetTime = moment.unix(+stageStartTime.toString());
   const duration = moment.duration(targetTime.diff(currentTime));
 
-  // we don't want app to crash when currentStageStartTime is not yet set
+  // we don't want app to crash when stageStartTime is not yet set
   let days = 0;
   let hours = 0;
   let minutes = 0;
   let seconds = 0;
-  if (currentStageStartTime) {
+  if (stageStartTime) {
     days = Math.abs(duration.days());
     hours = Math.abs(duration.hours());
     minutes = Math.abs(duration.minutes());

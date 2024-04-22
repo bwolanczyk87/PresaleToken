@@ -1,48 +1,38 @@
-import { useContractReads, usePublicClient } from 'wagmi';
+import { useContractReads } from 'wagmi';
 import { useState, useEffect } from 'react';
-import { ABI } from '@/contract/PresaleContractABI';
+import { PresaleContractAbi } from '@/contract/AppBinaryInterfaces';
 
-/**
- * Hook to get current stage details as follows:
- * 1. stageTokenPrice - token price for the current stage
- * 2. stageTokenSupply - amount of tokens that are available for purchase in the stage
- * 3. currentStage - current stage number
- * 5. currentStageBlockStart - block number at which current stage started
- * 6. currentStageStartTime - timestamp of the current stage start block
- * 7. maxTokensPerStage - Maximum tokens a wallet can purchase per stage
- * 8. refetchCurrentStageStats - function to refetch the above details
- * @returns
- */
 const useGetCurrentStageStats = (): {
-  stageTokenPrice: number;
-  stageTokenSupply: number;
-  currentStage: number;
-  currentStageBlockStart: number;
-  currentStageStartTime: BigInt;
-  maxTokensPerStage: number;
+  stage: number;
+  stagePrice: number;
+  stageSupply: number;
+  stageStartTime: number;
+  stageEndTime: number;
+  stageMinWalletBuy: number;
+  stageMaxWalletBuy: number;
   refetchCurrentStageStats: () => void;
 } => {
   const [currentStageStats, setCurrentStageStats] = useState<{
-    stageTokenPrice: number;
-    stageTokenSupply: number;
-    currentStage: number;
-    currentStageBlockStart: number;
-    maxTokensPerStage: number;
+    stage: number;
+    stagePrice: number;
+    stageSupply: number;
+    stageStartTime: number;
+    stageEndTime: number;
+    stageMinWalletBuy: number;
+    stageMaxWalletBuy: number;
   }>({
-    stageTokenPrice: 0.0000064,
-    stageTokenSupply: 1000000000000,
-    currentStage: 1,
-    currentStageBlockStart: 22843780 /*0 - disable clock if not set */,
-    maxTokensPerStage: 1000000000000,
+    stage: 1,
+    stagePrice: 0,
+    stageSupply: 0,
+    stageStartTime: 1,
+    stageEndTime: 10,
+    stageMinWalletBuy: 0,
+    stageMaxWalletBuy: 0,
   });
-  const [currentStageStartTime, setCurrentStageStartTime] = useState<BigInt>(BigInt(0));
 
-  const publicClient = usePublicClient();
-
-  // contract calls to get stage details
   const preSaleContract = {
-    address: "0xC15167Cef1a6584A5d91A95E2070C800A157A2f2" as `0x${string}` | undefined,
-    abi: ABI as any,
+    address: process.env.PRESALE_CONTRACT_ADDRESS as `0x${string}` | undefined,
+    abi: PresaleContractAbi as any,
   };
 
   const {
@@ -54,25 +44,32 @@ const useGetCurrentStageStats = (): {
     contracts: [
       {
         ...preSaleContract,
-        functionName: 'currentStagePrice',
-        
+        functionName: 'stage'
       },
       {
         ...preSaleContract,
-        functionName: 'currentStage',
+        functionName: 'stagePrice'
       },
       {
         ...preSaleContract,
-        functionName: 'currentStageAvailableAmount',
+        functionName: 'stageSupply'
       },
       {
         ...preSaleContract,
-        functionName: 'currentStageBlockStart',
+        functionName: 'stageStartTime'
       },
       {
         ...preSaleContract,
-        functionName: 'STAGE_MAX_WALLET_BUY',
+        functionName: 'stageEndTime'
       },
+      {
+        ...preSaleContract,
+        functionName: 'stageMinWalletBuy'
+      },
+      {
+        ...preSaleContract,
+        functionName: 'stageMaxWalletBuy'
+      }
     ],
   });
 
@@ -82,37 +79,29 @@ const useGetCurrentStageStats = (): {
     }
 
     setCurrentStageStats((prevState) => {
-      const [price, stage, supply, block, maxPerWallet] = preSaleStageStats as {
+      const [stage, price, supply, start, end, minWalletBuy, maxWalletBuy] = preSaleStageStats as {
         result: number;
         status: string;
       }[];
+      if(prevState.stage == undefined) {
+        return prevState;
+      }
+
       return {
         ...prevState,
-        stageTokenPrice: parseFloat(price.result.toString()) / 10 ** 18,
-        stageTokenSupply: parseFloat(supply.result.toString()), // / 10 ** 18,
-        currentStage: stage.result,
-        currentStageBlockStart: block.result,
-        maxTokensPerStage: parseFloat(maxPerWallet.result.toString()), // / 10 ** 18,
+        stage: stage.result,
+        stagePrice: parseFloat(price.result.toString()) / 10 ** 6,
+        stageSupply: parseFloat(supply.result.toString()),
+        stageStartTime: start.result,
+        stageEndTime: end.result,
+        stageMinWalletBuy: parseFloat(minWalletBuy.result.toString()),
+        stageMaxWalletBuy: parseFloat(maxWalletBuy.result.toString())
       };
     });
   }, [loadingStageStats, errorLoadingStageStats, preSaleStageStats]);
 
-
-  // get the timestamp of the current stage start block
-  useEffect(() => {
-    if (!currentStageStats.currentStageBlockStart) return;
-    publicClient
-      .getBlock({
-        blockNumber: BigInt(currentStageStats.currentStageBlockStart),
-      })
-      .then((blockDetails) => setCurrentStageStartTime(blockDetails.timestamp))
-      .catch((error) => console.log(error));
-  }, [currentStageStats.currentStageBlockStart, publicClient]);
-
-
   return {
     ...currentStageStats,
-    currentStageStartTime,
     refetchCurrentStageStats,
   };
 };

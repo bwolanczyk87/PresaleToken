@@ -1,0 +1,14 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "dev",
+      "path": "frontend/",
+      "group": "build",
+      "label": "yarn: dev",
+      "problemMatcher": [],
+      "detail": "Task that runs the dev server"
+    }
+  ]
+}

@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import ModalSuccessState from '@/components/Modals/ModalProgressStates/ModalSuccessState/ModalSuccessState';
 
 const successProps = {
-  tokenAmount: '4',
+  saleTokenQuantity: '4',
   closeModal: () => {},
 };
 
@@ -24,7 +24,7 @@ describe('ModalSuccessState', () => {
     render(<ModalSuccessState {...successProps} />);
 
     expect(
-      screen.getByText(`You just purchased ${successProps.tokenAmount} WM tokens.`)
+      screen.getByText(`You just purchased ${successProps.saleTokenQuantity} WM tokens.`)
     ).toBeInTheDocument();
   });
 
