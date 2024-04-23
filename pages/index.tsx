@@ -34,7 +34,7 @@ export default function HomePage() {
         height: '100vh',
       }}
       header={
-        <Header height={180} p="lg">
+        <Header height={36} p="lg">
           <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"></link>
           <HeaderContainer />
         </Header>
@@ -42,8 +42,14 @@ export default function HomePage() {
     >
           <Text mt="lg" mb="xl" style={{ 
             
-            textAlign: 'center' }}>
-    I am Worm memcoin on the Flare blockchain. I want to become the biggest and most popular of all worms.
+            textAlign: 'center',
+            fontSize: 30,
+            paddingLeft: 100,
+            paddingRight: 100,
+            paddingTop: 30,
+            paddingBottom: 0 }}>
+    I am Worm memcoin on the Flare blockchain. 
+    I want to become the biggest and most popular of all worms.
 
 Help me with this. Help yourself.
     </Text>

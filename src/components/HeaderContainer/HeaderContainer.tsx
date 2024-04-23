@@ -12,7 +12,7 @@ const HeaderContainer: React.FC = () => (
     <Container size="lg">
       <Group position="apart">
         <div>
-          <Image maw={36} mx="auto" radius="md" src="/worm-shotgun.png" alt="Yupikayey motherfucker" />
+          <Image  maw={36} mx="auto" radius="md" src="/worm-shotgun.png" alt="Yupikayey motherfucker" />
         </div>
         {/* <CartoonButton1
           label="Home"
