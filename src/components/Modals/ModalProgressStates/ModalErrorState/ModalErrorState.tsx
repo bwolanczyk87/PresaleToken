@@ -28,7 +28,7 @@ const ModalErrorState: React.FC = () => (
       }}
     >
       {' '}
-      <Image maw={64} mx="auto" radius="md" src="/error.svg" alt="error icon" />
+      <Image maw={64} mx="auto" radius="md" src="/error.png" alt="Error, as always." />
     </div>
     <Text fz="lg" fw="bold" color="white">
       An error occurred

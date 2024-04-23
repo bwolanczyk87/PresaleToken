@@ -7,16 +7,16 @@ import { useState, useEffect } from 'react';
  * @returns
  */
 const useGetAccountBalances = (): {
-  walletBalance: number;
+  walletCurrencyBalance: number;
   tokenBalance: number;
   refetchFlrBalance: () => void;
   refetchTokenBalance: () => void;
 } => {
-  const [walletBalance, setWalletBalance] = useState<{
-    walletBalance: number;
+  const [walletCurrencyBalance, setWalletBalance] = useState<{
+    walletCurrencyBalance: number;
     tokenBalance: number;
   }>({
-    walletBalance: 0,
+    walletCurrencyBalance: 0,
     tokenBalance: 0,
   });
 
@@ -39,12 +39,12 @@ const useGetAccountBalances = (): {
     if (!walletData?.formatted || !tokenData?.formatted) return;
     setWalletBalance((prevState) => ({
       ...prevState,
-      walletBalance: +walletData.formatted,
+      walletCurrencyBalance: +walletData.formatted,
       tokenBalance: +tokenData.formatted,
     }));
   }, [walletData?.formatted, tokenData?.formatted]);
 
-  return { ...walletBalance, refetchFlrBalance, refetchTokenBalance };
+  return { ...walletCurrencyBalance, refetchFlrBalance, refetchTokenBalance };
 };
 
 export default useGetAccountBalances;

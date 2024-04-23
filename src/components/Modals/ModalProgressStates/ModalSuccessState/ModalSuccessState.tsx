@@ -4,13 +4,13 @@ import { ModalSuccessStateProps } from '@/components/Modals/types';
 /**
  * Modal section to show success upon token purchase
  * @prop closeModal - function to close the modal
- * @prop saleTokenQuantity - amount of tokens purchased
+ * @prop purchaseAmount - amount of tokens purchased
  * @props transactionHash - transaction hash
  * @returns React node
  */
 const ModalSuccessState: React.FC<ModalSuccessStateProps> = ({
   closeModal,
-  saleTokenQuantity,
+  purchaseQuantity,
   transactionHash,
 }) => (
   <Flex
@@ -40,7 +40,7 @@ const ModalSuccessState: React.FC<ModalSuccessStateProps> = ({
     <Text fz="lg" fw="bold" color="white">
       Request successful
     </Text>
-    <Text align="center">You just purchased {saleTokenQuantity} WM tokens.</Text>
+    <Text align="center">You just purchased {purchaseQuantity.toLocaleString()} WM tokens!</Text>
 
     {/* show link to contract call for confirmation  */}
     {Boolean(transactionHash) && (

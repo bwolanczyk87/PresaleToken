@@ -3,9 +3,9 @@ import { TokenFormBalancesProps } from '@/components/TokenPurchaseForm/types';
 
 const TokenPurchaseBalances: React.FC<TokenFormBalancesProps> = ({
   insufficientBalance,
-  stagePrice,
-  saleTokenAmount,
-  walletBalance,
+  purchasePrice,
+  purchaseAmount,
+  walletCurrencyBalance,
   walletTokenBalance,
 }) => (
   <Box
@@ -17,29 +17,29 @@ const TokenPurchaseBalances: React.FC<TokenFormBalancesProps> = ({
     }} 
   >
     <Group position="apart">
-      <Text size="1rem" fw={500} color={insufficientBalance ? 'red' : 'white'}>
-        Worms You want to buy
+      <Text size="1.2rem" fw={500} color={insufficientBalance ? 'red' : 'white'}>
+        Worms to buy:
       </Text>
-      <Text size="1rem" fw={600} color={insufficientBalance ? 'red' : 'white'}>
-        {Number(saleTokenAmount / stagePrice).toLocaleString()} WM
+      <Text size="1.2rem" fw={600} color={insufficientBalance ? 'red' : 'white'}>
+        {Number(purchasePrice > 0 ? purchaseAmount / purchasePrice : 0).toLocaleString()} WM
+      </Text>
+    </Group>
+
+    <Group position="apart" mt="md">
+      <Text size="1.0rem" fw={500} color="white">
+        Flare in your wallet:
+      </Text>
+      <Text size="1.0rem" fw={600} color="white">
+        {walletCurrencyBalance.toFixed(2).toLocaleString()} FLR
       </Text>
     </Group>
 
     <Group position="apart">
       <Text size="1rem" fw={500} color="white">
-      Worms You own under bed
+        Worms in your wallet:
       </Text>
       <Text size="1rem" fw={600} color="white">
-      {walletTokenBalance.toFixed(5).toLocaleString()} WM
-      </Text>
-    </Group>
-
-    <Group position="apart" mt="md">
-      <Text size="1.2rem" fw={500} color="white">
-        Your wallet balance
-      </Text>
-      <Text size="1.2rem" fw={600} color="white">
-        {walletBalance.toFixed(5).toLocaleString()} FLR
+        {walletTokenBalance.toFixed(2).toLocaleString()} WM
       </Text>
     </Group>
   </Box>

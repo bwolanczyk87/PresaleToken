@@ -1,14 +1,14 @@
 import { CurrentStageValues } from '@/components/CurrentStageStats/types';
 
 export interface TokenPurchaseModalProps extends CurrentStageValues {
-  walletBalance: number;
+  walletCurrencyBalance: number;
   walletTokenBalance: number;
 }
 
 export interface TokenFormBalancesProps {
   insufficientBalance: boolean;
-  stagePrice: number;
-  saleTokenAmount: number;
-  walletBalance: number;
+  purchaseAmount: number;
+  purchasePrice: number;
+  walletCurrencyBalance: number;
   walletTokenBalance: number;
 }

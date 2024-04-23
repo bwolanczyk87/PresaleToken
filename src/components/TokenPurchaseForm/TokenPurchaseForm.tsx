@@ -14,7 +14,7 @@ import TokenPurchaseBalances from '@/components/TokenPurchaseBalances/TokenPurch
  * @prop stagePrice,
  * @prop stageSupply,
  * @prop stageMaxWalletBuy,
- * @prop walletBalance,
+ * @prop walletCurrencyBalance,
  * @prop walletTokenBalance,
  * @returns
  */
@@ -23,7 +23,7 @@ const TokenPurchaseForm: React.FC<TokenPurchaseModalProps> = ({
   stageSupply,
   stageMinWalletBuy,
   stageMaxWalletBuy,
-  walletBalance,
+  walletCurrencyBalance,
   walletTokenBalance,
 }) => {
   const [opened, { open, close }] = useDisclosure(false);
@@ -34,11 +34,11 @@ const TokenPurchaseForm: React.FC<TokenPurchaseModalProps> = ({
 
   const form = useForm({
     initialValues: {
-      saleTokenQuantity: '',
+      purchaseAmount: '',
     },
 
     validate: {
-      saleTokenQuantity: (value) => {
+      purchaseAmount: (value) => {
         if (!value) {
           return 'Token amount required';
         }
@@ -59,7 +59,7 @@ const TokenPurchaseForm: React.FC<TokenPurchaseModalProps> = ({
         }
 
         // cannot buy with insufficient wallet balance
-        if (+value * stagePrice > walletBalance) {
+        if (+value * stagePrice > walletCurrencyBalance) {
           return 'Insufficient funds.';
         }
 
@@ -73,8 +73,8 @@ const TokenPurchaseForm: React.FC<TokenPurchaseModalProps> = ({
     open();
   };
 
-  const saleTokenAmount = +form.values.saleTokenQuantity; // * stagePrice;
-  const insufficientBalance = saleTokenAmount > walletBalance;
+  const purchaseAmount = +form.values.purchaseAmount;
+  const insufficientBalance = purchaseAmount > walletCurrencyBalance;
 
   return (
     <>
@@ -87,8 +87,8 @@ const TokenPurchaseForm: React.FC<TokenPurchaseModalProps> = ({
             my="1rem"
             w="100%"
             min={1}
-            step="0.00001"
-            {...form.getInputProps('saleTokenQuantity')}
+            step="0.000001"
+            {...form.getInputProps('purchaseAmount')}
             type="number"
             styles={{
               input: {
@@ -130,11 +130,11 @@ const TokenPurchaseForm: React.FC<TokenPurchaseModalProps> = ({
       {/* show balances depending on the amount of token  */}
       {isConnected && (
         <TokenPurchaseBalances
-          walletBalance={walletBalance}
-          walletTokenBalance={walletTokenBalance}
-          stagePrice={stagePrice}
-          saleTokenAmount={saleTokenAmount}
           insufficientBalance={insufficientBalance}
+          purchaseAmount={purchaseAmount}
+          purchasePrice={stagePrice}
+          walletCurrencyBalance={walletCurrencyBalance}
+          walletTokenBalance={walletTokenBalance}
         />
       )}
 
@@ -144,10 +144,9 @@ const TokenPurchaseForm: React.FC<TokenPurchaseModalProps> = ({
         close={close}
         connectionProgress={connectionProgress}
         setConnectionProgress={setConnectionProgress}
-        saleTokenQuantity={form.values.saleTokenQuantity}
-        walletBalance={walletBalance}
-        stagePrice={stagePrice ?? 0}
-        saleTokenAmount={saleTokenAmount}
+        purchaseAmount={+form.values.purchaseAmount}
+        purchasePrice={stagePrice ?? 0}
+        walletCurrencyBalance={walletCurrencyBalance}
       />
     </>
   );

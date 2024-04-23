@@ -19,7 +19,7 @@ export default function HomePage() {
     stageMaxWalletBuy
   } = useGetCurrentStageStats();
 
-  const { walletBalance, tokenBalance } = useGetAccountBalances();
+  const { walletCurrencyBalance, tokenBalance } = useGetAccountBalances();
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -94,7 +94,7 @@ Help me with this. Help yourself.
                 stageSupply={stageSupply}
                 stageMinWalletBuy={stageMinWalletBuy}
                 stageMaxWalletBuy={stageMaxWalletBuy}
-                walletBalance={walletBalance}
+                walletCurrencyBalance={walletCurrencyBalance}
                 walletTokenBalance={tokenBalance}
               />
             </Flex>

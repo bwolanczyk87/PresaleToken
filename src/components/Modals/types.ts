@@ -14,10 +14,9 @@ export interface TokenPurchaseModalProps {
   setConnectionProgress: Dispatch<SetStateAction<ConnectionProgress>>;
   opened: boolean;
   close: () => void;
-  saleTokenQuantity: string;
-  stagePrice: number;
-  saleTokenAmount: number;
-  walletBalance: number;
+  purchasePrice: number;
+  purchaseAmount: number;
+  walletCurrencyBalance: number;
 }
 
 export interface ModalConnectingStateProps {
@@ -29,12 +28,12 @@ export interface ModalConnectingStateProps {
 export interface ModalSuccessStateProps {
   transactionHash?: string;
   closeModal: () => void;
-  saleTokenQuantity: string;
+  purchaseQuantity: number;
 }
 
 export interface ModalPurchaseDetailsProps {
-  saleTokenQuantity: string;
-  stagePrice: number;
-  saleTokenAmount: number;
-  walletBalance: number;
+  purchaseAmount: number;
+  purchaseQuantity: number;
+  purchasePrice: number;
+  walletCurrencyBalance: number;
 }

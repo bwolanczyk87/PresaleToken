@@ -11,7 +11,7 @@ import ModalPurchaseDetails from '@/components/Modals/ModalProgressStates/ModalP
 import useGetAccountBalances from '@/hooks/useGetAccountBalances';
 import useGetCurrentStageStats from '@/hooks/useGetCurrentStageStats';
 import { PresaleContractAbi, TokenContractAbi } from '@/contract/AppBinaryInterfaces';
-import { useContractReads } from 'wagmi';
+//import { useContractReads } from 'wagmi';
 
 /**
  * Modal to show progress of the token purchase
@@ -19,10 +19,10 @@ import { useContractReads } from 'wagmi';
  * @prop close - function to close modal
  * @prop connectionProgress - progress of transaction request
  * @prop setConnectionProgress - change the progress state of the transaction
- * @prop saleTokenAmount - total price to purchase given amount of tokens
- * @prop saleTokenQuantity - amount of tokens to purchase
- * @prop walletBalance - Flr balance of the current account
- * @prop stagePrice - price of one token for the current stage.
+ * @prop purchaseAmount - total price to purchase given amount of tokens
+ * @prop purchaseAmount - amount of tokens to purchase
+ * @prop walletCurrencyBalance - Flr balance of the current account
+ * @prop purchasePrice - price of one token for the current stage.
  * @returns
  */
 
@@ -31,10 +31,9 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
   close,
   connectionProgress,
   setConnectionProgress,
-  saleTokenAmount,
-  saleTokenQuantity,
-  walletBalance,
-  stagePrice,
+  purchaseAmount,
+  purchasePrice,
+  walletCurrencyBalance,
 }) => {
   const tokenContract = {
     address: process.env.TOKEN_ADDRESS as `0x${string}` | undefined,
@@ -60,16 +59,18 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
   // });
 
   const decimal = 6;
-  const buyTokenQuantity = stagePrice == 0 ? 0 : +saleTokenQuantity / (stagePrice/decimal);
-  const buyTokenQuantityRounded = buyTokenQuantity < 0 ? 0 : Math.round(buyTokenQuantity); 
-  const saleTokenAmountRounded = saleTokenAmount < 0 ? 0 : Math.round(saleTokenAmount);
+  const purchaseQuantity = purchasePrice == 0 ? 0 : Math.round(+purchaseAmount / purchasePrice);
+  console.log(`purchaseQuantity: ${purchaseQuantity}`);
+
+  const purchaseAmountRounded = BigInt((purchaseAmount < 0 ? 0 : Math.round(purchaseAmount)) *  10**18);
+  console.log(`purchaseAmountRounded: ${purchaseAmountRounded}`);
 
   const { config } = usePrepareContractWrite({
     ...presaleContract,
     functionName: 'saleToken',
-    args: [ BigInt(buyTokenQuantityRounded) ],
-    value: BigInt(saleTokenAmountRounded),
-    enabled: Boolean(useDebounce(saleTokenQuantity, 500)),
+    args: [ BigInt(purchaseQuantity) ],
+    value: purchaseAmountRounded,
+    enabled: Boolean(useDebounce(purchaseAmount, 500)),
     chainId: flare.id,
   });
 
@@ -125,10 +126,10 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
     >
       {/* token and price details to show to the user  */}
       <ModalPurchaseDetails
-        saleTokenQuantity={saleTokenQuantity}
-        walletBalance={walletBalance}
-        stagePrice={stagePrice}
-        saleTokenAmount={saleTokenAmount}
+        purchaseAmount={purchaseAmount}
+        purchaseQuantity={purchaseQuantity} 
+        purchasePrice={purchasePrice}
+        walletCurrencyBalance={walletCurrencyBalance}
       />
       {connectionProgress === ConnectionProgress.NOT_STARTED && (
         <Button
@@ -137,7 +138,7 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
           size="lg"
           mt="md"
           uppercase
-          disabled={false}//{!write}
+          disabled={!write}
           style={{
             backgroundColor: '#CAFC36',
             color: '#000000',
@@ -172,7 +173,7 @@ const TokenPurchaseModal: React.FC<TokenPurchaseModalProps> = ({
       {connectionProgress === ConnectionProgress.SUCCESS && (
         <ModalSuccessState
           closeModal={handleClose}
-          saleTokenQuantity={saleTokenQuantity}
+          purchaseQuantity={purchaseQuantity}
           transactionHash={data?.hash}
         />
       )}
