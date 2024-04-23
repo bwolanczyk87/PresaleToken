@@ -34,11 +34,19 @@ export default function HomePage() {
         height: '100vh',
       }}
       header={
-        <Header height={80} p="lg">
+        <Header height={180} p="lg">
+          <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"></link>
           <HeaderContainer />
         </Header>
       }
     >
+          <Text mt="lg" mb="xl" style={{ 
+            
+            textAlign: 'center' }}>
+    I am Worm memcoin on the Flare blockchain. I want to become the biggest and most popular of all worms.
+
+Help me with this. Help yourself.
+    </Text>
       <Container size="lg" pt="xl">
         <Grid gutter={5} gutterXs="md" gutterMd="xl" gutterXl={120}>
           <Grid.Col xs={12} sm={6}>
